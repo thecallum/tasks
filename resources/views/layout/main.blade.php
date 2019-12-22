@@ -8,13 +8,12 @@
 
     @yield('header')
 
-    <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/app.css">
 </head>
 <body>
     @include('layout.header')
 
-    <div class="container xm-auto px-6 mt-6">
+    <div class="container mx-auto px-6 mt-6">
         @yield('content')
     </div>
 </body>

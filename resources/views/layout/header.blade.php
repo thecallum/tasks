@@ -5,12 +5,28 @@
 
 
         <nav>
-            @auth
-                <a class="hover:underline" href="{{ url('/home') }}">Home</a>
-            @else
+            @guest
+
                 <a class="hover:underline" href="{{ route('login') }}">Login</a>
                 <a class="hover:underline" href="{{ route('register') }}">Register</a>
-            @endauth
+
+            @else
+
+                <a class="hover:underline" href="/boards">Boards</a>
+
+                <a class="hover:underline" href="{{ route('logout') }}"
+                    onclick="event.preventDefault();
+                    document.getElementById('logout-form').submit();">
+                    Logout
+                </a>
+
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                    @csrf
+                </form>
+            @endguest
+
+
+             
     
             </nav>
     </header>

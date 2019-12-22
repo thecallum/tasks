@@ -11,10 +11,8 @@
 |
  */
 
-Route::get('/', function () {
-    return view('index');
-});
+Route::view('/', 'index');
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::resource('boards', 'BoardsController')->middleware('auth');

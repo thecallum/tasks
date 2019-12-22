@@ -1,6 +1,9 @@
 // Variables
 @import "variables";
 
+// Tailwind
+@import "../../node_modules/tailwindcss/dist/tailwind.css";
+
 html {
     font-family: sans-serif;
     font-size: 62.5%;

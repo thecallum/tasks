@@ -43,10 +43,6 @@ class BoardsController extends Controller
 
         $attributes['user_id'] = auth()->id();
 
-        // dd($attributes);
-
-        // dd(auth()->user());
-
         Board::create($attributes);
 
         return redirect('/boards');
@@ -60,7 +56,9 @@ class BoardsController extends Controller
      */
     public function show(Board $board)
     {
-        //
+        $this->authorize('update', $board);
+
+        return view('boards.view', compact('board'));
     }
 
     /**

@@ -8,7 +8,7 @@
 
     <ul>
         @foreach($boards as $board)
-            <li>{{ $board->name }}</li>
+            <li><a href="/boards/{{ $board->id }}">{{ $board->name }}</a></li>
         @endforeach
     </ul>
 

@@ -40,9 +40,9 @@ class BoardsController extends Controller
         $attributes = $this->validateBoard($request);
         $attributes['user_id'] = auth()->id();
 
-        Board::create($attributes);
+        $board = Board::create($attributes);
 
-        return redirect('/boards');
+        return redirect('/boards/' . $board->id);
     }
 
     /**
@@ -55,7 +55,10 @@ class BoardsController extends Controller
     {
         $this->authorize('update', $board);
 
-        return view('boards.view', compact('board'));
+        $tasks = $board->tasks;
+        $cards = $board->cards;
+
+        return view('boards.view', compact(['board', 'tasks', 'cards']));
     }
 
     /**
@@ -101,7 +104,7 @@ class BoardsController extends Controller
 
         $board->delete();
 
-        return redirect('/boards/');
+        return redirect('/boards');
     }
 
     private function validateBoard($request)

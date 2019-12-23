@@ -18,10 +18,12 @@ class CreateCardsTable extends Migration
             $table->bigIncrements('id');
             $table->timestamps();
             $table->longText('description');
-            $table->bigInteger('list_id')->unsigned()->index();
+            $table->bigInteger('task_id')->unsigned()->index();
+            $table->bigInteger('board_id')->unsigned()->index();
             $table->string('name');
             $table->unsignedInteger('order');
-            $table->foreign('list_id')->references('id')->on('lists')->onDelete('cascade');
+            $table->foreign('task_id')->references('id')->on('tasks')->onDelete('cascade');
+            $table->foreign('board_id')->references('id')->on('boards')->onDelete('cascade');
 
         });
         Schema::enableForeignKeyConstraints();

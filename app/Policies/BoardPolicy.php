@@ -21,4 +21,9 @@ class BoardPolicy
     {
         return $user->id === $board->user_id;
     }
+
+      public function owns_board(User $user, Board $board)
+    {
+        return $board->user_id === $user->id;
+    }
 }

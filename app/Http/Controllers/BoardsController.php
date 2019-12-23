@@ -37,10 +37,7 @@ class BoardsController extends Controller
      */
     public function store(Request $request)
     {
-        $attributes = $request->validate([
-            'name' => 'required|min:3|max:255',
-        ]);
-
+        $attributes = $this->validateBoard($request);
         $attributes['user_id'] = auth()->id();
 
         Board::create($attributes);
@@ -69,7 +66,9 @@ class BoardsController extends Controller
      */
     public function edit(Board $board)
     {
-        //
+        $this->authorize('update', $board);
+
+        return view('boards.edit', compact('board'));
     }
 
     /**
@@ -81,7 +80,13 @@ class BoardsController extends Controller
      */
     public function update(Request $request, Board $board)
     {
-        //
+        $this->authorize('update', $board);
+
+        $attributes = $this->validateBoard($request);
+
+        $board->update($attributes);
+
+        return redirect('/boards/' . $board->id);
     }
 
     /**
@@ -92,6 +97,17 @@ class BoardsController extends Controller
      */
     public function destroy(Board $board)
     {
-        //
+        $this->authorize('update', $board);
+
+        $board->delete();
+
+        return redirect('/boards/');
+    }
+
+    private function validateBoard($request)
+    {
+        return $request->validate([
+            'name' => 'required|min:3|max:255',
+        ]);
     }
 }

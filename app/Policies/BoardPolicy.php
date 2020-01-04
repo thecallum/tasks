@@ -17,12 +17,13 @@ class BoardPolicy
      * @param  \App\Board  $board
      * @return mixed
      */
+
     public function update(User $user, Board $board)
     {
-        return $user->id === $board->user_id;
+        return (int)$user->id === (int)$board->user_id;
     }
 
-      public function owns_board(User $user, Board $board)
+    public function owns_board(User $user, Board $board)
     {
         return $board->user_id === $user->id;
     }

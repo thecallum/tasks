@@ -22,7 +22,7 @@ class TaskPolicy
 
     public function owns_task(User $user, Task $task)
     {
-        return $task->board->user_id === $user->id;
+        return (int)$task->board->user_id === (int)$user->id;
     }
   
 }

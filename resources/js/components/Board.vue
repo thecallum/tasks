@@ -19,45 +19,43 @@
 <script>
 const List = require("./List.vue").default;
 
-let ID = 0;
-
-function Card(value, order, listID) {
-    this.value = value;
-    this.order = order;
-    this.listID = listID;
-    this.id = ID++;
-}
-
 export default {
+    props: {
+        listData: Array,
+        cardData: Array
+    },
     mounted() {
         console.log("Board mounted");
+
+        const lists = this.listData;
+
+        const sortedList = {};
+
+        lists.forEach(list => {
+            const { name, order,id } = list;
+            // console.log('list', name, id);
+
+            const cards = this.cardData.filter(card => card.task_id.toString() === id.toString());
+
+            // console.log({cards})
+
+            sortedList[name] = cards;
+        });
+
+        // console.log({sortedList})
+
+        //  console.log(sortedList)
+        // console.log(this.cards)
+
+    this.cards = sortedList;
+
     },
     components: {
         List
     },
     data() {
         return {
-            cards: {
-                first: [new Card("Item 1", 1, 1), new Card("Item 2", 2, 1)],
-                second: [
-                    new Card("Item 3", 1, 2),
-                    new Card("Item 4", 2, 2),
-                    new Card("Item 5", 3, 2),
-                    new Card("Item 6", 4, 2),
-                    new Card("Item 7", 5, 2),
-                    new Card("Item 8", 6, 2)
-                ],
-                third: [
-                    new Card("Item 9", 1, 3),
-                    new Card("Item 10", 2, 3),
-                    new Card("Item 11", 3, 3)
-                ],
-                fourth: [
-                    new Card("Item 12", 1, 4),
-                    new Card("Item 13", 2, 4),
-                    new Card("Item 14", 3, 4)
-                ]
-            },
+            cards: {},
 
             lastRemoved: null,
             updating: {
@@ -72,13 +70,13 @@ export default {
             this.updateList();
         },
 
-        updateList(listID, cardIndex) {
+        updateList(list_id, cardIndex) {
             const toUpdate = [];
             // Resort List
             const newList = JSON.parse(JSON.stringify(this.cards));
             const oldList = JSON.parse(JSON.stringify(this.cards));
 
-            // Update ListID of moved card
+            // Update lsit_id of moved card
 
             // Update order
             Object.keys(this.cards).forEach((key, listIndex) => {
@@ -86,7 +84,7 @@ export default {
                     const newCard = {
                         ...card,
                         order: index + 1,
-                        listID: listIndex + 1
+                        list_id: listIndex + 1
                     };
                     if (this.cardUpdated(newCard, oldList[key][index]))
                         toUpdate.push(newCard);

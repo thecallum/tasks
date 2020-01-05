@@ -7,57 +7,6 @@
 @endsection
 
 @section('content')
-    <style>
-        .list-col {
-            width: 200px;
-            margin-left: 15px;
-        }
-        .list-col.empty > div {
-            background: #f8f6f9;
-            height: 80px;
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .list-col.empty > div::before {
-            content: 'Drag here';
-        }
-        .list-container {
-            display: flex;
-            margin-left: -15px;
-            padding: 15px;
-        }
-        .list-item {
-            display: block;
-            padding: 15px;
-            cursor: pointer;
-        }
-        .list-item.first {
-            background: rgba(191, 64, 64, 0.2);
-            border: 2px solid rgba(191, 64, 64, 0.2);
-        }
-        .list-item.second {
-            background: rgba(128, 191, 64, 0.2);
-            border: 2px solid rgba(128, 191, 64, 0.2);
-        }
-        .list-item.third {
-            background: rgba(64, 191, 191, 0.2);
-            border: 2px solid rgba(64, 191, 191, 0.2);
-        }
-        .list-item.fourth {
-            background: rgba(128, 64, 191, 0.2);
-            border: 2px solid rgba(128, 64, 191, 0.2);
-        }
-
-        .ghost {
-          
-            background-color: pink !important;
-        }
-
-    </style>
-
-
     <h1>{{ $board->name }}</h1>
 
     <div class="mb-4">
@@ -90,8 +39,10 @@
 
     <p>Lists</p>
 
-    <div class="list">
+
+    <!-- <div class="list">
         <div class="list-container">
+
 
         @foreach($tasks as $task)
 
@@ -123,11 +74,14 @@
               </div>
             </div>
 
-        @endforeach
+        @endforeach -->
 
         <div id="app">
 
-            <Board></Board>
+            <Board
+                :list-data="{{ $tasks }}"
+                :card-data="{{ $cards }}"
+            ></Board>
 
         </div>
               

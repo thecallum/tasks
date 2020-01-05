@@ -29,29 +29,33 @@
         padding: 15px;
         cursor: pointer;
 
-        &.first {
-            $color: hsla(0, 50%, 50%, 0.2);
+        $color: hsla(0, 50%, 50%, 0.2);
             background: $color;
             border: 2px solid $color;
-        }
 
-        &.second {
-            $color: hsla(90, 50%, 50%, 0.2);
-            background: $color;
-            border: 2px solid $color;
-        }
+        // &.first {
+        //     $color: hsla(0, 50%, 50%, 0.2);
+        //     background: $color;
+        //     border: 2px solid $color;
+        // }
 
-        &.third {
-            $color: hsla(180, 50%, 50%, 0.2);
-            background: $color;
-            border: 2px solid $color;
-        }
+        // &.second {
+        //     $color: hsla(90, 50%, 50%, 0.2);
+        //     background: $color;
+        //     border: 2px solid $color;
+        // }
 
-        &.fourth {
-            $color: hsla(270, 50%, 50%, 0.2);
-            background: $color;
-            border: 2px solid $color;
-        }
+        // &.third {
+        //     $color: hsla(180, 50%, 50%, 0.2);
+        //     background: $color;
+        //     border: 2px solid $color;
+        // }
+
+        // &.fourth {
+        //     $color: hsla(270, 50%, 50%, 0.2);
+        //     background: $color;
+        //     border: 2px solid $color;
+        // }
     }
 }
 

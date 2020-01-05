@@ -46868,30 +46868,8 @@ video {
   display: block;
   padding: 15px;
   cursor: pointer;
-}
-
-.list-item.first,
-.first.ghost {
   background: rgba(191, 64, 64, 0.2);
   border: 2px solid rgba(191, 64, 64, 0.2);
-}
-
-.list-item.second,
-.second.ghost {
-  background: rgba(128, 191, 64, 0.2);
-  border: 2px solid rgba(128, 191, 64, 0.2);
-}
-
-.list-item.third,
-.third.ghost {
-  background: rgba(64, 191, 191, 0.2);
-  border: 2px solid rgba(64, 191, 191, 0.2);
-}
-
-.list-item.fourth,
-.fourth.ghost {
-  background: rgba(128, 64, 191, 0.2);
-  border: 2px solid rgba(128, 64, 191, 0.2);
 }
 
 .ghost {

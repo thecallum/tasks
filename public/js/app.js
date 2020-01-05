@@ -1886,30 +1886,40 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 var List = __webpack_require__(/*! ./List.vue */ "./resources/js/components/List.vue")["default"];
 
-var ID = 0;
-
-function Card(value, order, listID) {
-  this.value = value;
-  this.order = order;
-  this.listID = listID;
-  this.id = ID++;
-}
-
 /* harmony default export */ __webpack_exports__["default"] = ({
+  props: {
+    listData: Array,
+    cardData: Array
+  },
   mounted: function mounted() {
+    var _this = this;
+
     console.log("Board mounted");
+    var lists = this.listData;
+    var sortedList = {};
+    lists.forEach(function (list) {
+      var name = list.name,
+          order = list.order,
+          id = list.id; // console.log('list', name, id);
+
+      var cards = _this.cardData.filter(function (card) {
+        return card.task_id.toString() === id.toString();
+      }); // console.log({cards})
+
+
+      sortedList[name] = cards;
+    }); // console.log({sortedList})
+    //  console.log(sortedList)
+    // console.log(this.cards)
+
+    this.cards = sortedList;
   },
   components: {
     List: List
   },
   data: function data() {
     return {
-      cards: {
-        first: [new Card("Item 1", 1, 1), new Card("Item 2", 2, 1)],
-        second: [new Card("Item 3", 1, 2), new Card("Item 4", 2, 2), new Card("Item 5", 3, 2), new Card("Item 6", 4, 2), new Card("Item 7", 5, 2), new Card("Item 8", 6, 2)],
-        third: [new Card("Item 9", 1, 3), new Card("Item 10", 2, 3), new Card("Item 11", 3, 3)],
-        fourth: [new Card("Item 12", 1, 4), new Card("Item 13", 2, 4), new Card("Item 14", 3, 4)]
-      },
+      cards: {},
       lastRemoved: null,
       updating: {
         message: null,
@@ -1921,23 +1931,23 @@ function Card(value, order, listID) {
     end: function end(e) {
       this.updateList();
     },
-    updateList: function updateList(listID, cardIndex) {
-      var _this = this;
+    updateList: function updateList(list_id, cardIndex) {
+      var _this2 = this;
 
       var toUpdate = []; // Resort List
 
       var newList = JSON.parse(JSON.stringify(this.cards));
-      var oldList = JSON.parse(JSON.stringify(this.cards)); // Update ListID of moved card
+      var oldList = JSON.parse(JSON.stringify(this.cards)); // Update lsit_id of moved card
       // Update order
 
       Object.keys(this.cards).forEach(function (key, listIndex) {
         newList[key] = newList[key].map(function (card, index) {
           var newCard = _objectSpread({}, card, {
             order: index + 1,
-            listID: listIndex + 1
+            list_id: listIndex + 1
           });
 
-          if (_this.cardUpdated(newCard, oldList[key][index])) toUpdate.push(newCard);
+          if (_this2.cardUpdated(newCard, oldList[key][index])) toUpdate.push(newCard);
           return newCard;
         });
       });
@@ -1951,14 +1961,14 @@ function Card(value, order, listID) {
       return this.cards[key];
     },
     pushUpdate: function pushUpdate(toUpdate) {
-      var _this2 = this;
+      var _this3 = this;
 
       if (toUpdate.length < 1) return;
       this.updating.message = null;
       this.updating.loading = true;
       setTimeout(function () {
-        _this2.updating.message = "updated";
-        _this2.updating.loading = false;
+        _this3.updating.message = "updated";
+        _this3.updating.loading = false;
       }, 1000);
       console.log("push update");
       console.table(JSON.parse(JSON.stringify(toUpdate)));
@@ -41186,7 +41196,7 @@ var render = function() {
               class: ["list-item", _vm.classname],
               staticStyle: { padding: "30px" }
             },
-            [_vm._v("\n            " + _vm._s(card.value) + "\n        ")]
+            [_vm._v("\n            " + _vm._s(card.description) + "\n        ")]
           )
         }),
         0

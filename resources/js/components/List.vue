@@ -14,7 +14,7 @@
                 :key="card.value"
                 style="padding: 30px;"
             >
-                {{ card.value }}
+                {{ card.description }}
             </div>
         </Draggable>
 

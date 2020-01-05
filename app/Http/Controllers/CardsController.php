@@ -49,7 +49,7 @@ class CardsController extends Controller
 
         $card = Card::create($attributes);
 
-        return back();
+        return $card;
     }
 
     /**

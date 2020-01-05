@@ -6,6 +6,8 @@
 
         <div class="list-container">
             <List
+                :list-name="key"
+                :list-id="1"
                 :list="list(key)"
                 group="list"
                 :end="end"
@@ -24,34 +26,13 @@ export default {
         listData: Array,
         cardData: Array
     },
-    mounted() {
-        console.log("Board mounted");
-
-        const lists = this.listData;
-
-        const sortedList = {};
-
-        lists.forEach(list => {
-            const { name, order,id } = list;
-            // console.log('list', name, id);
-
-            const cards = this.cardData.filter(card => card.task_id.toString() === id.toString());
-
-            // console.log({cards})
-
-            sortedList[name] = cards;
-        });
-
-        // console.log({sortedList})
-
-        //  console.log(sortedList)
-        // console.log(this.cards)
-
-    this.cards = sortedList;
-
-    },
     components: {
         List
+    },
+
+    mounted() {
+        console.log("Board mounted");
+        this.initializeCards();
     },
     data() {
         return {
@@ -66,6 +47,20 @@ export default {
     },
 
     methods: {
+        initializeCards() {
+            const lists = this.listData;
+            const cards = {};
+
+            lists.forEach(({ name, id }) => {
+                const listCards = this.cardData.filter(
+                    card => card.task_id.toString() === id.toString()
+                );
+                cards[name] = listCards;
+            });
+
+            this.cards = cards;
+        },
+
         end(e) {
             this.updateList();
         },

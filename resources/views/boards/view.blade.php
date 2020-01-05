@@ -60,6 +60,7 @@
               <div class="card-add">
                 <form method="POST" action="/cards/{{ $task->id }}">
                     @csrf 
+                    @method('DELETE')
 
                     <div class="mb-4">
                         <label class="block text-gray-700 text-sm font-bold mb-2">

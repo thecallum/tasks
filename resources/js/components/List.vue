@@ -8,43 +8,35 @@
             ghost-class="ghost"
             draggable=".list-item"
         >
-            <div
-                :class="['list-item', classname]"
-                v-for="card in list"
-                :key="card.value"
-                style="padding: 30px;"
-            >
-                {{ card.description }}
-            </div>
+            <Card v-for="card in list" :key="card.value" :card="card"></Card>
         </Draggable>
 
-        <button
-            style="width: 100%; border: none; background: #000; color: #fff; padding: 15px;"
-            :style="{ 'margin-top': margin }"
-        >
-            Add Card
-        </button>
+        <add-card :list-name="listName" :list-id="listId"></add-card>
+
+        
     </div>
 </template>
 
 <script>
 const Draggable = require("vuedraggable");
+const AddCard = require("./AddCard.vue").default;
+const Card = require("./Card.vue").default;
 
 export default {
     components: {
-        Draggable
+        Draggable,
+        AddCard,
+        Card
     },
     props: {
+        listName: String,
+        listId: Number, 
         list: Array,
         group: String,
-        end: Function,
-        classname: String
+        end: Function
     },
-
-    data() {
-        return {
-            margin: this.list.length > 0 ? "15px" : "0"
-        };
+    mounted() {
+        console.log('name', this.listName)
     }
 };
 </script>

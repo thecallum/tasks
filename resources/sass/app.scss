@@ -4,6 +4,8 @@
 // Tailwind
 @import "../../node_modules/tailwindcss/dist/tailwind.css";
 
+@import "./board";
+
 html {
     font-family: sans-serif;
     font-size: 62.5%;
@@ -29,73 +31,73 @@ body {
     font-family: sans-serif;
 }
 
-.list {
-    height: 400px;
-    overflow-x: auto;
+// .list {
+//     height: 400px;
+//     overflow-x: auto;
 
-    &-container {
-        margin-left: -30px;
-        padding: 30px 30px 0;
-        white-space: nowrap;
-    }
+//     &-container {
+//         margin-left: -30px;
+//         padding: 30px 30px 0;
+//         white-space: nowrap;
+//     }
 
-    &-item {
-        background-color: #ebecf0;
-        width: 250px;
-        display: inline-block;
-        margin-left: 30px;
-        flex-shrink: 0;
-        padding: 15px;
-        border-radius: 3px;
-        vertical-align: top;
-    }
+//     &-item {
+//         background-color: #ebecf0;
+//         width: 250px;
+//         display: inline-block;
+//         margin-left: 30px;
+//         flex-shrink: 0;
+//         padding: 15px;
+//         border-radius: 3px;
+//         vertical-align: top;
+//     }
 
-    &-title {
-        margin: 0;
-        font-weight: normal;
-    }
-}
+//     &-title {
+//         margin: 0;
+//         font-weight: normal;
+//     }
+// }
 
-.card {
-    &-list {
-        margin: 0 0 15px;
-        padding: 0;
-    }
-    &-item {
-        margin: 15px 0 0;
-        padding: 10px;
-        border-radius: 5px;
-        background: #fff;
-        display: block;
-        cursor: pointer;
+// .card {
+//     &-list {
+//         margin: 0 0 15px;
+//         padding: 0;
+//     }
+//     &-item {
+//         margin: 15px 0 0;
+//         padding: 10px;
+//         border-radius: 5px;
+//         background: #fff;
+//         display: block;
+//         cursor: pointer;
 
-        &:hover {
-            background: #f9f9f9;
-        }
-    }
+//         &:hover {
+//             background: #f9f9f9;
+//         }
+//     }
 
-    &-add {
-        &-button {
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            width: 100%;
-            padding: 10px;
-            border-radius: 5px;
-            text-align: left;
-            font-size: 18px;
+//     &-add {
+//         &-button {
+//             background: transparent;
+//             border: none;
+//             cursor: pointer;
+//             width: 100%;
+//             padding: 10px;
+//             border-radius: 5px;
+//             text-align: left;
+//             font-size: 18px;
 
-            &::before {
-                content: "+";
-                margin-right: 10px;
-                font-size: 20px;
-                font-weight: bold;
-                line-height: 20px;
-            }
+//             &::before {
+//                 content: "+";
+//                 margin-right: 10px;
+//                 font-size: 20px;
+//                 font-weight: bold;
+//                 line-height: 20px;
+//             }
 
-            &:hover {
-                background: darken(#ebecf0, 10%);
-            }
-        }
-    }
-}
+//             &:hover {
+//                 background: darken(#ebecf0, 10%);
+//             }
+//         }
+//     }
+// }

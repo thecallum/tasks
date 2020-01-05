@@ -16,5 +16,7 @@
     <div class="container mx-auto px-6 mt-6">
         @yield('content')
     </div>
+
+    @yield('javascript')
 </body>
 </html>

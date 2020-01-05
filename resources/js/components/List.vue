@@ -1,19 +1,17 @@
 <template>
-    <div class="list-col" :class="{ empty: list.length == 0 }">
+    <div class="list-col" :class="{ empty: cards.length == 0 }">
         <Draggable
-            :list="list"
-            group="group"
+            :cards="cards"
+            :group="group"
             @end="end"
             animation="200"
             ghost-class="ghost"
             draggable=".list-item"
         >
-            <Card v-for="card in list" :key="card.value" :card="card"></Card>
+            <Card v-for="card in cards" :key="card.value" :card="card"></Card>
         </Draggable>
 
-        <add-card :list-name="listName" :list-id="listId"></add-card>
-
-        
+        <add-card :list-name="list.name" :list-id="list.id"></add-card>
     </div>
 </template>
 
@@ -29,14 +27,10 @@ export default {
         Card
     },
     props: {
-        listName: String,
-        listId: Number, 
-        list: Array,
+        list: Object,
+        cards: Array,
         group: String,
         end: Function
-    },
-    mounted() {
-        console.log('name', this.listName)
     }
 };
 </script>

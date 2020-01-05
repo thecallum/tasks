@@ -6,13 +6,11 @@
 
         <div class="list-container">
             <List
-                :list-name="key"
-                :list-id="1"
-                :list="list(key)"
+                :list="list"
+                :cards="cards[list.name]"
                 group="list"
                 :end="end"
-                :classname="key"
-                v-for="(key, index) in Object.keys(cards)"
+                v-for="(list, index) in listData"
             ></List>
         </div>
     </div>
@@ -20,8 +18,16 @@
 
 <script>
 const List = require("./List.vue").default;
+const eventBus = require('../eventBus.js');
 
 export default {
+    beforeMount() {
+        console.log("Board mounted");
+        this.initializeCards();
+
+        // Global Add Card Event
+        eventBus.$on('addCard', this.addCard);
+    },
     props: {
         listData: Array,
         cardData: Array
@@ -30,10 +36,7 @@ export default {
         List
     },
 
-    mounted() {
-        console.log("Board mounted");
-        this.initializeCards();
-    },
+    
     data() {
         return {
             cards: {},
@@ -47,6 +50,15 @@ export default {
     },
 
     methods: {
+        addCard(card) {
+            const currentList = this.listData.filter(list => list.id.toString() === card.task_id.toString())[0];
+            const listName = currentList.name;
+
+            this.cards = {
+                ...this.cards,
+                [listName]: [ ...this.cards[listName], card ]
+            };
+        },
         initializeCards() {
             const lists = this.listData;
             const cards = {};
@@ -93,10 +105,6 @@ export default {
 
         cardUpdated(newCard, oldCard) {
             return JSON.stringify(newCard) !== JSON.stringify(oldCard);
-        },
-
-        list(key) {
-            return this.cards[key];
         },
 
         pushUpdate(toUpdate) {

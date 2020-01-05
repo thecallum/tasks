@@ -1,5 +1,6 @@
+// Reusable Form Library
+
 class Form {
-    // Used to find fields
     fields;
     token;
     errors = {};
@@ -20,9 +21,6 @@ class Form {
 
     submit(method, url) {
         return new Promise((resolve, reject) => {
-
-            console.log("FORM SUBMIT");
-
             const requestData = {};
 
             this.fields.forEach(field => {
@@ -33,17 +31,12 @@ class Form {
             requestData["_token"] = this.token;
             requestData["_method"] = method.toUpperCase();
 
-            console.log("Request data", requestData);
-
-            const that = this;
-
             this.loading = true;
             this.errors = {};
 
             axios[method.toLowerCase()](url, requestData)
                 .then(response => {
                     resolve(response);
-
                 })
                 .catch(error => {
                     this.errors = error.response.data.errors;

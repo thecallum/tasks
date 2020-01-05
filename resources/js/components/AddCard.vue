@@ -25,7 +25,8 @@
 
 <script>
 const axios = require("axios");
-const Form = require('../Form.js');
+const Form = require("../Form.js");
+const eventBus = require("../eventBus.js");
 
 export default {
     props: {
@@ -35,7 +36,7 @@ export default {
     data() {
         return {
             focus: false,
-            form: new Form(["name"]),
+            form: new Form(["name"])
         };
     },
     methods: {
@@ -51,14 +52,19 @@ export default {
             e.preventDefault();
             const that = this;
 
-            this.form.submit("POST", "/cards/" + this.listId)
-            .then(response => {
-                console.log({response});
-                that.form.reset();
-            })
-            .catch(error => {
-                console.log('error', error.response.data.error);
-            })
+            this.form
+                .submit("POST", "/cards/" + this.listId)
+                .then(response => {
+                    console.log({ response });
+
+                    that.form.reset();
+
+                    const newCard = response.data;
+                    eventBus.$emit("addCard", newCard);
+                })
+                .catch(error => {
+                    console.log("error", error.response.data.error);
+                });
         },
         createClickOutEventListener() {
             setTimeout(() =>
@@ -84,7 +90,7 @@ export default {
             this.removeClickOutEventListener();
             this.focus = false;
             this.form.reset();
-        },
+        }
     }
 };
 </script>

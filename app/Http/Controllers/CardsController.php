@@ -6,6 +6,7 @@ use App\Card;
 use App\Task;
 use App\Board;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class CardsController extends Controller
 {
@@ -94,7 +95,11 @@ class CardsController extends Controller
      */
     public function destroy(Card $card)
     {
-        //
+        $this->authorize('owns_card', $card);
+
+        $card->delete();
+
+        return response(null, 200);
     }
 
         private function validateCard($request)

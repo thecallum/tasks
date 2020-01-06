@@ -20,4 +20,5 @@ Route::resource('boards', 'BoardsController')->middleware('auth');
 Route::middleware(['auth'])->group(function () {
     Route::post('/tasks/{board}', 'TasksController@store');
     Route::post('/cards/{task}', 'CardsController@store');
+    Route::delete('/cards/{card}', 'CardsController@destroy');
 });

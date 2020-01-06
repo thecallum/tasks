@@ -27,6 +27,7 @@ export default {
 
         // Global Add Card Event
         eventBus.$on('addCard', this.addCard);
+        eventBus.$on('deleteCard', this.deleteCard);
     },
     props: {
         listData: Array,
@@ -59,6 +60,47 @@ export default {
                 [listName]: [ ...this.cards[listName], card ]
             };
         },
+        deleteCard(selectedCard) {
+            console.log('delete CARD', selectedCard);
+
+            const currentList = this.listData.filter(list => list.id.toString() === selectedCard.task_id.toString())[0];
+            const listName = currentList.name;
+
+            const updatedCards = {
+                ...this.cards,
+                [listName]: this.cards[listName].filter(card => card.id.toString() !== selectedCard.id.toString())
+            };
+
+            // Cannot use order yet, all cards have order of 1
+            this.cards = this.reorderCards(updatedCards);
+            this.cards = updatedCards;
+        },
+
+        reorderCards(cards) {
+            // const oldList = JSON.parse(JSON.stringify(cards));
+            // const newList = JSON.parse(JSON.stringify(cards));
+            // const toUpdate = [];
+
+            // console.log('updatedcards', cards)
+
+            // // Update order
+            // Object.keys(oldList).forEach((key, listIndex) => {
+            //     // console.log('reorder', key)
+            //     newList[key] = newList[key].map((card, index) => {
+            //         const newCard = {
+            //             ...card,
+            //             order: index + 1,
+            //             list_id: listIndex + 1
+            //         };
+            //         if (this.cardUpdated(newCard, oldList[key][index]))
+            //             toUpdate.push(newCard);
+            //         return newCard;
+            //     });
+            // });
+
+            // console.log('toUpdate', toUpdate)
+        },
+
         initializeCards() {
             const lists = this.listData;
             const cards = {};
@@ -77,13 +119,14 @@ export default {
             this.updateList();
         },
 
+        // when list reordered
         updateList(list_id, cardIndex) {
             const toUpdate = [];
             // Resort List
             const newList = JSON.parse(JSON.stringify(this.cards));
             const oldList = JSON.parse(JSON.stringify(this.cards));
 
-            // Update lsit_id of moved card
+            // Update list_id of moved card
 
             // Update order
             Object.keys(this.cards).forEach((key, listIndex) => {

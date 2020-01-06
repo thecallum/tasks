@@ -6,11 +6,11 @@
 
         <div class="list-container">
             <List
-                :list="list"
-                :cards="cards[list.name]"
+                :list="lists[key]"
+                :cards="list"
                 group="list"
                 :end="end"
-                v-for="(list, index) in listData"
+                v-for="(list, key) in cards"
             ></List>
         </div>
     </div>
@@ -24,10 +24,15 @@ export default {
     beforeMount() {
         console.log("Board mounted");
         this.initializeCards();
+        
+        this.listData.map(list => {
+            this.lists[list.name] = list;
+        })
 
         // Global Add Card Event
         eventBus.$on('addCard', this.addCard);
         eventBus.$on('deleteCard', this.deleteCard);
+        eventBus.$on('deleteList', this.deleteList);
     },
     props: {
         listData: Array,
@@ -42,6 +47,8 @@ export default {
         return {
             cards: {},
 
+            lists: {},
+
             lastRemoved: null,
             updating: {
                 message: null,
@@ -51,6 +58,11 @@ export default {
     },
 
     methods: {
+        deleteList(list) {
+            const cards = JSON.parse(JSON.stringify(this.cards));
+            delete cards[list.name];
+            this.cards = cards;
+        },
         addCard(card) {
             const currentList = this.listData.filter(list => list.id.toString() === card.task_id.toString())[0];
             const listName = currentList.name;
@@ -166,3 +178,11 @@ export default {
     }
 };
 </script>
+
+
+<style lang="scss" scoped>
+    .list-container {
+        margin-left: -30px !important;
+        padding: 0 !important;
+    }
+</style>

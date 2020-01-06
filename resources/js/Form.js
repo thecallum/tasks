@@ -34,7 +34,7 @@ class Form {
             this.loading = true;
             this.errors = {};
 
-            axios[method.toLowerCase()](url, requestData)
+            axios.post(url, requestData)
                 .then(response => {
                     resolve(response);
                 })

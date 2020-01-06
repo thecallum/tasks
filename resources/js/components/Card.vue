@@ -66,4 +66,5 @@ export default {
     transform: translate(-50%, -50%);
     vertical-align: center;
 }
+
 </style>

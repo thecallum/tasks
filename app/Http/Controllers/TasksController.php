@@ -93,7 +93,9 @@ class TasksController extends Controller
      */
     public function destroy(Task $task)
     {
-        //
+        $this->authorize('owns_task', $task);
+        
+        $task->delete();
     }
 
     private function validateTask($request)

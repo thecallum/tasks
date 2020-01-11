@@ -48,7 +48,7 @@ class TasksController extends Controller
 
         $task = Task::create($attributes);
 
-        return back();
+        return $task;
     }
 
     /**

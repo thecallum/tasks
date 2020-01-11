@@ -19,13 +19,19 @@ class Form {
         });
     }
 
+    loadFields() {
+        const response = {};
+
+        this.fields.forEach(field => {
+            response[field] = this[field];
+        });
+
+        return response;
+    }
+
     submit(method, url) {
         return new Promise((resolve, reject) => {
-            const requestData = {};
-
-            this.fields.forEach(field => {
-                requestData[field] = this[field];
-            });
+            const requestData = this.loadFields();
 
             // Add laravel fields
             requestData["_token"] = this.token;

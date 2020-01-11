@@ -4,6 +4,8 @@
             {{ updating.loading ? "loading" : updating.message }}
         </p>
 
+        <create-list :board-id="boardId"></create-list>
+
         <div class="list-container">
             <List
                 :list="lists[key]"
@@ -18,31 +20,26 @@
 
 <script>
 const List = require("./List.vue").default;
-const eventBus = require('../eventBus.js');
+const CreateList = require("./CreateList.vue").default;
+const eventBus = require("../eventBus.js");
 
 export default {
     beforeMount() {
         console.log("Board mounted");
-        this.initializeCards();
-        
-        this.listData.map(list => {
-            this.lists[list.name] = list;
-        })
 
-        // Global Add Card Event
-        eventBus.$on('addCard', this.addCard);
-        eventBus.$on('deleteCard', this.deleteCard);
-        eventBus.$on('deleteList', this.deleteList);
+        this.initializeCards();
+        this.initializeLists();
+        this.initializeEventHandlers();
     },
     props: {
         listData: Array,
-        cardData: Array
+        cardData: Array,
+        boardId: String,
     },
     components: {
-        List
+        List,
+        CreateList
     },
-
-    
     data() {
         return {
             cards: {},
@@ -58,29 +55,48 @@ export default {
     },
 
     methods: {
+        createList(list) {
+            // update lists
+            this.lists = {
+                ...this.lists,
+                [list.name]: list
+            };
+
+            // update cards
+            this.cards = {
+                ...this.cards,
+                [list.name]: []
+            };
+        },
         deleteList(list) {
             const cards = JSON.parse(JSON.stringify(this.cards));
             delete cards[list.name];
             this.cards = cards;
         },
         addCard(card) {
-            const currentList = this.listData.filter(list => list.id.toString() === card.task_id.toString())[0];
+            const currentList = this.listData.filter(
+                list => list.id.toString() === card.task_id.toString()
+            )[0];
             const listName = currentList.name;
 
             this.cards = {
                 ...this.cards,
-                [listName]: [ ...this.cards[listName], card ]
+                [listName]: [...this.cards[listName], card]
             };
         },
         deleteCard(selectedCard) {
-            console.log('delete CARD', selectedCard);
+            console.log("delete CARD", selectedCard);
 
-            const currentList = this.listData.filter(list => list.id.toString() === selectedCard.task_id.toString())[0];
+            const currentList = this.listData.filter(
+                list => list.id.toString() === selectedCard.task_id.toString()
+            )[0];
             const listName = currentList.name;
 
             const updatedCards = {
                 ...this.cards,
-                [listName]: this.cards[listName].filter(card => card.id.toString() !== selectedCard.id.toString())
+                [listName]: this.cards[listName].filter(
+                    card => card.id.toString() !== selectedCard.id.toString()
+                )
             };
 
             // Cannot use order yet, all cards have order of 1
@@ -92,9 +108,7 @@ export default {
             // const oldList = JSON.parse(JSON.stringify(cards));
             // const newList = JSON.parse(JSON.stringify(cards));
             // const toUpdate = [];
-
             // console.log('updatedcards', cards)
-
             // // Update order
             // Object.keys(oldList).forEach((key, listIndex) => {
             //     // console.log('reorder', key)
@@ -109,7 +123,6 @@ export default {
             //         return newCard;
             //     });
             // });
-
             // console.log('toUpdate', toUpdate)
         },
 
@@ -125,6 +138,20 @@ export default {
             });
 
             this.cards = cards;
+        },
+
+        initializeLists() {
+            this.listData.map(list => {
+                this.lists[list.name] = list;
+            });
+        },
+
+        initializeEventHandlers() {
+            // Global Add Card Event
+            eventBus.$on("addCard", this.addCard);
+            eventBus.$on("deleteCard", this.deleteCard);
+            eventBus.$on("deleteList", this.deleteList);
+            eventBus.$on("createList", this.createList);
         },
 
         end(e) {
@@ -179,10 +206,9 @@ export default {
 };
 </script>
 
-
 <style lang="scss" scoped>
-    .list-container {
-        margin-left: -30px !important;
-        padding: 0 !important;
-    }
+.list-container {
+    margin-left: -30px !important;
+    padding: 0 !important;
+}
 </style>

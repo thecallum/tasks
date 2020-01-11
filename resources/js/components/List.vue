@@ -1,6 +1,8 @@
 <template>
     <div>
         <div class="list" :class="{ empty: cards.length == 0 }">
+            <h1>{{ list.name }}</h1>
+            
             <div class="delete-list" @click="deleteList"></div>
 
             <Draggable

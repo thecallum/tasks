@@ -49,7 +49,7 @@ export default {
             if (this.form.name == "") return;
 
             this.form
-                .submit("POST", "/tasks/" + this.boardId)
+                .post("/tasks/" + this.boardId)
                 .then(response => {
                     console.log("response", response);
                     this.form.reset();

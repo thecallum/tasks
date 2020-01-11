@@ -50,15 +50,22 @@ export default {
     data() {
         return {
             deleteForm: new Form(),
-            updateForm: new Form({
-                name: this.card.name,
-                description: this.card.description
-            }),
+            updateForm: null,
             toggled: false
         };
     },
-    beforeUpdate() {
-        this.updateFormFields();
+    watch: {
+        toggled(isToggled) {
+            /* Initialize update form when opened */
+            if (isToggled) {
+                this.updateForm = new Form({
+                    name: this.card.name,
+                    description: this.card.description
+                });
+            } else {
+                this.updateForm = null;
+            }
+        }
     },
     methods: {
         updateFormFields() {
@@ -70,7 +77,7 @@ export default {
         },
         deleteCard() {
             this.deleteForm
-                .submit("DELETE", "/cards/" + this.card.id)
+                .delete("/cards/" + this.card.id)
                 .then(response => {
                     console.log("response", response);
                     eventBus.$emit("deleteCard", this.card, this.listName);
@@ -86,7 +93,7 @@ export default {
             console.log("Card update submit");
 
             this.updateForm
-                .submit("PATCH", "/cards/" + this.card.id)
+                .patch("/cards/" + this.card.id)
                 .then(response => {
                     console.log("response", response);
                     this.toggled = false;

@@ -52,7 +52,7 @@ export default {
             e.preventDefault();
 
             this.form
-                .submit("POST", "/cards/" + this.listId)
+                .post("/cards/" + this.listId)
                 .then(response => {
                     console.log({ response });
 

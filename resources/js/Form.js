@@ -51,6 +51,24 @@ class Form {
         return response;
     }
 
+    reset() {
+        this.fields.forEach(field => {
+            this[field] = "";
+        });
+        this.errors = {};
+    }
+
+    loadCSRFToken() {
+        try {
+            const token = document
+                .querySelector('meta[name="csrf-token"]')
+                .getAttribute("content");
+            return token;
+        } catch (e) {
+            console.log("ERROR", "Cannot find CSRF Token!");
+        }
+    }
+
     submit(method, url) {
         return new Promise((resolve, reject) => {
             const requestData = this.loadFields();
@@ -84,22 +102,25 @@ class Form {
         });
     }
 
-    reset() {
-        this.fields.forEach(field => {
-            this[field] = "";
-        });
-        this.errors = {};
+    /* Helper Functions */
+    get(url) {
+        return this.submit("GET", url);
     }
 
-    loadCSRFToken() {
-        try {
-            const token = document
-                .querySelector('meta[name="csrf-token"]')
-                .getAttribute("content");
-            return token;
-        } catch (e) {
-            console.log("ERROR", "Cannot find CSRF Token!");
-        }
+    post(url) {
+        return this.submit("POST", url);
+    }
+
+    put(url) {
+        return this.submit("PUT", url);
+    }
+
+    patch(url) {
+        return this.submit("PATCH", url);
+    }
+
+    delete(url) {
+        return this.submit("DELETE", url);
     }
 }
 

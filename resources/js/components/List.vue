@@ -54,7 +54,7 @@ export default {
         deleteList() {
             if (confirm("Do you want to delete the list?")) {
                 this.form
-                    .submit("DELETE", "/tasks/" + this.list.id)
+                    .delete("/tasks/" + this.list.id)
                     .then(response => {
                         console.log("response", response);
                         eventBus.$emit("deleteList", this.list);

@@ -22,4 +22,5 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/tasks/{task}', 'TasksController@destroy');
     Route::post('/cards/{task}', 'CardsController@store');
     Route::delete('/cards/{card}', 'CardsController@destroy');
+    Route::patch('/cards/{card}', 'CardsController@update');
 });

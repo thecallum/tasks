@@ -34,7 +34,7 @@ export default {
     props: {
         listData: Array,
         cardData: Array,
-        boardId: String,
+        boardId: String
     },
     components: {
         List,
@@ -69,39 +69,22 @@ export default {
             };
         },
         deleteList(list) {
-            const cards = JSON.parse(JSON.stringify(this.cards));
-            delete cards[list.name];
-            this.cards = cards;
+            delete this.cards[list.name];
         },
-        addCard(card) {
-            const currentList = this.listData.filter(
-                list => list.id.toString() === card.task_id.toString()
-            )[0];
-            const listName = currentList.name;
-
-            this.cards = {
-                ...this.cards,
-                [listName]: [...this.cards[listName], card]
-            };
+        updateCard(updatedCard, listName) {
+            this.cards[listName] = this.cards[listName].map(card => {
+                return card.id.toString() === updatedCard.id.toString()
+                    ? updatedCard
+                    : card;
+            });
         },
-        deleteCard(selectedCard) {
-            console.log("delete CARD", selectedCard);
-
-            const currentList = this.listData.filter(
-                list => list.id.toString() === selectedCard.task_id.toString()
-            )[0];
-            const listName = currentList.name;
-
-            const updatedCards = {
-                ...this.cards,
-                [listName]: this.cards[listName].filter(
-                    card => card.id.toString() !== selectedCard.id.toString()
-                )
-            };
-
-            // Cannot use order yet, all cards have order of 1
-            this.cards = this.reorderCards(updatedCards);
-            this.cards = updatedCards;
+        addCard(card, listName) {
+            this.cards[listName] = [...this.cards[listName], card];
+        },
+        deleteCard(selectedCard, listName) {
+            this.cards[listName] = this.cards[listName].filter(
+                card => card.id.toString() !== selectedCard.id.toString()
+            );
         },
 
         reorderCards(cards) {
@@ -150,6 +133,7 @@ export default {
             // Global Add Card Event
             eventBus.$on("addCard", this.addCard);
             eventBus.$on("deleteCard", this.deleteCard);
+            eventBus.$on("updateCard", this.updateCard);
             eventBus.$on("deleteList", this.deleteList);
             eventBus.$on("createList", this.createList);
         },

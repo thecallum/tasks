@@ -45,7 +45,6 @@ class CardsController extends Controller
         $attributes['task_id'] = $task->id;
         // Need to auto increment this...
         $attributes['order'] = 1;
-        $attributes['description'] = 'some description';
         $attributes['board_id'] = $task->board_id;
 
         $card = Card::create($attributes);
@@ -83,8 +82,11 @@ class CardsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Card $card)
-    {
-        //
+    {   
+        $this->authorize('owns_card', $card);
+        $attributes = $this->validateCard($request);
+        $card->update($attributes);
+        return $card;
     }
 
     /**
@@ -96,16 +98,15 @@ class CardsController extends Controller
     public function destroy(Card $card)
     {
         $this->authorize('owns_card', $card);
-
         $card->delete();
-
         return response(null, 200);
     }
 
         private function validateCard($request)
     {
         return $request->validate([
-            'name' => 'required|min:3|max:255'
+            'name' => 'required|min:3|max:255',
+            'description' => 'nullable|min:3|max:255',
         ]);
     }
 }

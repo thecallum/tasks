@@ -1,7 +1,40 @@
 <template>
     <div class="list-item card">
-        <span>{{ card.name }} | {{ card.order}}</span>
-        <button class="button-delete" @click="deleteCard"></button>
+        <span>{{ card.name }} | {{ listName }}</span>
+        <div>
+            <button class="button-edit" @click="editCard">Edit</button>
+            <button class="button-delete" @click="deleteCard"></button>
+        </div>
+
+        <div v-if="toggled" class="card-details">
+            <h3>Card Details</h3>
+
+            <form @submit="handleSubmit">
+                <div>
+                    <input
+                        type="text"
+                        placeholder="Card Name"
+                        v-model="updateForm.name"
+                    />
+                </div>
+
+                <div>
+                    <input
+                        type="text"
+                        placeholder="Card Description"
+                        v-model="updateForm.description"
+                    />
+                </div>
+
+                <ul>
+                    <li v-for="error in updateForm.errors">{{ error[0] }}</li>
+                </ul>
+
+                <div>
+                    <button type="submit">Update Card</button>
+                </div>
+            </form>
+        </div>
     </div>
 </template>
 
@@ -11,33 +44,75 @@ const Form = require("../Form.js");
 
 export default {
     props: {
-        card: Object
+        card: Object,
+        listName: String
     },
     data() {
         return {
-            form: new Form([])
-        }
+            deleteForm: new Form(),
+            updateForm: new Form({
+                name: this.card.name,
+                description: this.card.description
+            }),
+            toggled: false
+        };
+    },
+    beforeUpdate() {
+        this.updateFormFields();
     },
     methods: {
+        updateFormFields() {
+            this.updateForm.name = this.card.name;
+            this.updateForm.description = this.card.description;
+        },
+        editCard() {
+            this.toggled = !this.toggled;
+        },
         deleteCard() {
-            this.form.submit('DELETE', '/cards/' + this.card.id)
-            .then(response => {
-                console.log('response', response);
-                eventBus.$emit("deleteCard", this.card);
+            this.deleteForm
+                .submit("DELETE", "/cards/" + this.card.id)
+                .then(response => {
+                    console.log("response", response);
+                    eventBus.$emit("deleteCard", this.card, this.listName);
+                })
+                .catch(error => {
+                    console.log("error", error);
+                });
+        },
 
-            })
-            .catch(err => {
-                console.log('error', error)
-            })
+        handleSubmit(e) {
+            e.preventDefault();
+
+            console.log("Card update submit");
+
+            this.updateForm
+                .submit("PATCH", "/cards/" + this.card.id)
+                .then(response => {
+                    console.log("response", response);
+                    this.toggled = false;
+                    eventBus.$emit("updateCard", response.data, this.listName);
+                })
+                .catch(error => {
+                    console.log("error", error);
+                });
+
+            console.log({
+                ...this.updateForm
+            });
         }
     }
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .card {
     padding: 15px 30px 15px 15px;
     position: relative;
+
+    &-details {
+        margin-top: 15px;
+        background: rgba(255, 255, 255, 0.2);
+    }
 }
 
 .button-delete {
@@ -51,20 +126,29 @@ export default {
     border-radius: 50%;
     width: 20px;
     height: 20px;
+
+    &:hover {
+        background: hsl(0, 50%, 40%);
+    }
+
+    &::after {
+        content: "X";
+        position: absolute;
+        display: block;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        vertical-align: center;
+    }
 }
 
-.button-delete:hover {
-    background: hsl(0, 50%, 40%);
-}
+.button-edit {
+    background: hsl(150, 80%, 30%);
+    padding: 3px 6px;
+    border-radius: 4px;
 
-.button-delete::after {
-    content: "X";
-    position: absolute;
-    display: block;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    vertical-align: center;
+    &:hover {
+        background: hsl(150, 80%, 40%);
+    }
 }
-
 </style>

@@ -50,17 +50,16 @@ export default {
         },
         handleSubmit(e) {
             e.preventDefault();
-            const that = this;
 
             this.form
                 .submit("POST", "/cards/" + this.listId)
                 .then(response => {
                     console.log({ response });
 
-                    that.form.reset();
+                    this.form.reset();
 
                     const newCard = response.data;
-                    eventBus.$emit("addCard", newCard);
+                    eventBus.$emit("addCard", newCard, this.listName);
                 })
                 .catch(error => {
                     console.log("error", error.response.data.error);

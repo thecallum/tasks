@@ -11,4 +11,8 @@ class Card extends Model
     public function board() {
         return $this->belongsTo('App\Board')->withDefault();
     }
+
+    public function task() {
+        return $this->belongsTo('App\Task')->withDefault();
+    }
 }

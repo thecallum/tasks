@@ -1,6 +1,6 @@
 <template>
     <div class="list-item card">
-        <span>{{ card.name }} | {{ listName }}</span>
+        <span>{{ card.name }} | {{ card.order }}</span>
         <div>
             <button class="button-edit" @click="editCard">Edit</button>
             <button class="button-delete" @click="deleteCard"></button>

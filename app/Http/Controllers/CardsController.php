@@ -10,25 +10,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CardsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -42,36 +23,16 @@ class CardsController extends Controller
 
         $attributes = $this->validateCard($request);
 
+        // Count Number of cards
+        $cardCount = $task->cards->count();
+
         $attributes['task_id'] = $task->id;
-        // Need to auto increment this...
-        $attributes['order'] = 1;
+        $attributes['order'] = $cardCount + 1;
         $attributes['board_id'] = $task->board_id;
 
         $card = Card::create($attributes);
 
         return $card;
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Card  $card
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Card $card)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Card  $card
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Card $card)
-    {
-        //
     }
 
     /**
@@ -98,7 +59,18 @@ class CardsController extends Controller
     public function destroy(Card $card)
     {
         $this->authorize('owns_card', $card);
+
+        $cardPosition = $card->order;
         $card->delete();
+    
+        /* Update order by -1 to cards after the deleted card */
+
+        $cardsToUpdate = $card->task->cards->where('order', '>', $cardPosition);
+
+        foreach($cardsToUpdate as $card) {
+            $card->update([ 'order' => $card->order - 1 ]);
+        }
+
         return response(null, 200);
     }
 

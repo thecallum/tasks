@@ -6,17 +6,17 @@
             <div class="delete-list" @click="deleteList"></div>
 
             <Draggable
-                :cards="cards"
                 :group="group"
                 @end="e => cardDragEnd(e, list)"
-                @start="e => cardDragStart(e)"
+                @start="e => cardDragStart(e, list)"
                 @add="e => cardAddedToNewList(e, list)"
                 animation="200"
                 ghost-class="ghost"
                 draggable=".list-item"
+                v-model="localCards"
             >
                 <Card
-                    v-for="card in cards"
+                    v-for="card in localCards"
                     :key="card.value"
                     :card="card"
                     :list-name="list.name"
@@ -49,9 +49,19 @@ export default {
         cardDragStart: Function,
         cardAddedToNewList: Function
     },
+    computed: {
+        localCards: {
+            get() {
+                return this.cards;
+            },
+            set(newArray) {
+                eventBus.$emit("cardDragged", this.list.name, newArray);
+            }
+        }
+    },
     data() {
         return {
-            form: new Form([])
+            form: new Form()
         };
     },
     methods: {

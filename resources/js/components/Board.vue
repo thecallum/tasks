@@ -49,9 +49,9 @@ export default {
     },
 
     methods: {
-        /* 
+        /*
             =============
-            Setup Methods 
+            Setup Methods
             =============
         */
 
@@ -62,6 +62,7 @@ export default {
             eventBus.$on("updateCard", this.updateCard);
             eventBus.$on("deleteList", this.deleteList);
             eventBus.$on("createList", this.createList);
+            eventBus.$on("cardDragged", this.cardDragged);
         },
         initializeCards() {
             const lists = this.listData;
@@ -81,9 +82,9 @@ export default {
             });
         },
 
-        /* 
+        /*
             ===================
-            List Update Methods 
+            List Update Methods
             ===================
         */
 
@@ -111,38 +112,55 @@ export default {
                 card => card.id.toString() !== selectedCard.id.toString()
             );
         },
+        cardDragged(listName, newArray) {
+            // Update Card Index
+            this.cards[listName] = newArray.map((card, index) => ({
+                ...card,
+                order: index
+            }));
+        },
 
-        /* 
+        /*
             ===========================
-            Drag Event Methods 
-            (Update database on change) 
+            Drag Event Methods
+            (Update database on change)
             ===========================
         */
 
         cardAddedToNewList(e, list) {
             this.newList = list;
         },
-        cardDragStart(e) {
+        cardDragStart(e, list) {
             // reset new list
             this.newList = null;
             this.startIndex = e.oldIndex;
+            this.startCard = this.cards[list.name][e.oldIndex].id;
         },
         cardDragEnd(e, list) {
             const { newIndex } = e;
-            const endList = this.newList === null ? list.id : this.newList.id;
-            const card = this.cards[list.name][this.startIndex];
+            const endList = this.newList === null ? list : this.newList;
+            const cardID = this.startCard;
 
-            if (this.startIndex === newIndex && list.id === endList)
-                return; /* Card must have moved */
+            this.handleCardDrag(
+                cardID,
+                this.startIndex,
+                newIndex,
+                list,
+                endList
+            );
+        },
+        handleCardDrag(cardID, startPosition, endPosition, startList, endList) {
+            if (startPosition === endPosition && startList.id === endList.id)
+                return; /* Card has not moved */
 
-            this.form.start_list = list.id;
-            this.form.end_list = endList;
-            this.form.new_position = newIndex;
+            this.form.start_list = startList.id;
+            this.form.end_list = endList.id;
+            this.form.new_position = endPosition;
 
             this.form
-                .patch("/cards/order/" + card.id)
+                .patch("/cards/order/" + cardID)
                 .then(response => {
-                    console.table(response.data);
+                    console.log(response);
                 })
                 .catch(error => {
                     console.log("error", error);

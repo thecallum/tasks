@@ -8,7 +8,9 @@
             <Draggable
                 :cards="cards"
                 :group="group"
-                @end="end"
+                @end="e => cardDragEnd(e, list)"
+                @start="e => cardDragStart(e)"
+                @add="e => cardAddedToNewList(e, list)"
                 animation="200"
                 ghost-class="ghost"
                 draggable=".list-item"
@@ -43,7 +45,9 @@ export default {
         list: Object,
         cards: Array,
         group: String,
-        end: Function
+        cardDragEnd: Function,
+        cardDragStart: Function,
+        cardAddedToNewList: Function
     },
     data() {
         return {

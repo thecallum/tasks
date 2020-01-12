@@ -1,18 +1,16 @@
 <template>
     <div>
-        <p v-if="updating.loading || updating.message">
-            {{ updating.loading ? "loading" : updating.message }}
-        </p>
-
         <create-list :board-id="boardId"></create-list>
 
         <div class="list-container">
             <List
+                v-for="(list, key) in cards"
                 :list="lists[key]"
                 :cards="list"
                 group="list"
-                :end="end"
-                v-for="(list, key) in cards"
+                :card-drag-end="cardDragEnd"
+                :card-drag-start="cardDragStart"
+                :card-added-to-new-list="cardAddedToNewList"
             ></List>
         </div>
     </div>
@@ -20,13 +18,12 @@
 
 <script>
 const List = require("./List.vue").default;
+const Form = require("../Form");
 const CreateList = require("./CreateList.vue").default;
 const eventBus = require("../eventBus.js");
 
 export default {
     beforeMount() {
-        console.log("Board mounted");
-
         this.initializeCards();
         this.initializeLists();
         this.initializeEventHandlers();
@@ -43,30 +40,58 @@ export default {
     data() {
         return {
             cards: {},
-
             lists: {},
-
             lastRemoved: null,
-            updating: {
-                message: null,
-                loading: false
-            }
+            newList: null,
+            startIndex: null,
+            form: new Form(["start_list", "end_list", "new_position"])
         };
     },
 
     methods: {
+        /* 
+            =============
+            Setup Methods 
+            =============
+        */
+
+        initializeEventHandlers() {
+            // Global Add Card Event
+            eventBus.$on("addCard", this.addCard);
+            eventBus.$on("deleteCard", this.deleteCard);
+            eventBus.$on("updateCard", this.updateCard);
+            eventBus.$on("deleteList", this.deleteList);
+            eventBus.$on("createList", this.createList);
+        },
+        initializeCards() {
+            const lists = this.listData;
+            const cards = {};
+
+            lists.forEach(({ name, id }) => {
+                const listCards = this.cardData
+                    .filter(card => card.task_id.toString() === id.toString())
+                    .sort((a, b) => parseInt(a.order) - parseInt(b.order));
+                cards[name] = listCards;
+            });
+            this.cards = cards;
+        },
+        initializeLists() {
+            this.listData.map(list => {
+                this.lists[list.name] = list;
+            });
+        },
+
+        /* 
+            ===================
+            List Update Methods 
+            ===================
+        */
+
         createList(list) {
             // update lists
-            this.lists = {
-                ...this.lists,
-                [list.name]: list
-            };
-
+            this.lists = { ...this.lists, [list.name]: list };
             // update cards
-            this.cards = {
-                ...this.cards,
-                [list.name]: []
-            };
+            this.cards = { ...this.cards, [list.name]: [] };
         },
         deleteList(list) {
             delete this.cards[list.name];
@@ -87,104 +112,41 @@ export default {
             );
         },
 
-        reorderCards(cards) {
-            // const oldList = JSON.parse(JSON.stringify(cards));
-            // const newList = JSON.parse(JSON.stringify(cards));
-            // const toUpdate = [];
-            // console.log('updatedcards', cards)
-            // // Update order
-            // Object.keys(oldList).forEach((key, listIndex) => {
-            //     // console.log('reorder', key)
-            //     newList[key] = newList[key].map((card, index) => {
-            //         const newCard = {
-            //             ...card,
-            //             order: index + 1,
-            //             list_id: listIndex + 1
-            //         };
-            //         if (this.cardUpdated(newCard, oldList[key][index]))
-            //             toUpdate.push(newCard);
-            //         return newCard;
-            //     });
-            // });
-            // console.log('toUpdate', toUpdate)
+        /* 
+            ===========================
+            Drag Event Methods 
+            (Update database on change) 
+            ===========================
+        */
+
+        cardAddedToNewList(e, list) {
+            this.newList = list;
         },
-
-        initializeCards() {
-            const lists = this.listData;
-            const cards = {};
-
-            lists.forEach(({ name, id }) => {
-                const listCards = this.cardData.filter(
-                    card => card.task_id.toString() === id.toString()
-                );
-                cards[name] = listCards;
-            });
-
-            this.cards = cards;
+        cardDragStart(e) {
+            // reset new list
+            this.newList = null;
+            this.startIndex = e.oldIndex;
         },
+        cardDragEnd(e, list) {
+            const { newIndex } = e;
+            const endList = this.newList === null ? list.id : this.newList.id;
+            const card = this.cards[list.name][this.startIndex];
 
-        initializeLists() {
-            this.listData.map(list => {
-                this.lists[list.name] = list;
-            });
-        },
+            if (this.startIndex === newIndex && list.id === endList)
+                return; /* Card must have moved */
 
-        initializeEventHandlers() {
-            // Global Add Card Event
-            eventBus.$on("addCard", this.addCard);
-            eventBus.$on("deleteCard", this.deleteCard);
-            eventBus.$on("updateCard", this.updateCard);
-            eventBus.$on("deleteList", this.deleteList);
-            eventBus.$on("createList", this.createList);
-        },
+            this.form.start_list = list.id;
+            this.form.end_list = endList;
+            this.form.new_position = newIndex;
 
-        end(e) {
-            this.updateList();
-        },
-
-        // when list reordered
-        updateList(list_id, cardIndex) {
-            const toUpdate = [];
-            // Resort List
-            const newList = JSON.parse(JSON.stringify(this.cards));
-            const oldList = JSON.parse(JSON.stringify(this.cards));
-
-            // Update list_id of moved card
-
-            // Update order
-            Object.keys(this.cards).forEach((key, listIndex) => {
-                newList[key] = newList[key].map((card, index) => {
-                    const newCard = {
-                        ...card,
-                        order: index + 1,
-                        list_id: listIndex + 1
-                    };
-                    if (this.cardUpdated(newCard, oldList[key][index]))
-                        toUpdate.push(newCard);
-                    return newCard;
+            this.form
+                .patch("/cards/order/" + card.id)
+                .then(response => {
+                    console.table(response.data);
+                })
+                .catch(error => {
+                    console.log("error", error);
                 });
-            });
-
-            this.pushUpdate(toUpdate);
-            this.cards = newList;
-        },
-
-        cardUpdated(newCard, oldCard) {
-            return JSON.stringify(newCard) !== JSON.stringify(oldCard);
-        },
-
-        pushUpdate(toUpdate) {
-            if (toUpdate.length < 1) return;
-
-            this.updating.message = null;
-            this.updating.loading = true;
-
-            setTimeout(() => {
-                this.updating.message = "updated";
-                this.updating.loading = false;
-            }, 1000);
-            console.log("push update");
-            console.table(JSON.parse(JSON.stringify(toUpdate)));
         }
     }
 };

@@ -75,7 +75,6 @@ class CardsController extends Controller
 
     public function updateOrder(Request $request, Card $card)
     {   
-        
         /*
             Validation
             ===============
@@ -91,62 +90,16 @@ class CardsController extends Controller
             'end_list' => 'required|integer',
             'new_position' => 'required|integer',            
         ]);
-
+        
         if ((int)$attributes['start_list'] === (int)$attributes['end_list']) {
-            // Same List
-            if ($card->order === $attributes['new_position']) 
-                return; /* card hasn't moved */
-
-            $task = $card->task;
-            $selectedCard = $card;
-            $direction; /* Direction the card moved */
-            
-            /* Start and end position of cards that need their order updated */
-            $startIndex;
-            $endIndex;
-
-            if ((int)$card->order < (int)$attributes['new_position']) {
-                $direction = 'descending';
-                $startIndex = (int)$card->order +1;
-                $endIndex = (int)$attributes['new_position'];
-            } else {
-                $direction = 'ascending';
-                $endIndex = (int)$card->order -1;
-                $startIndex = (int)$attributes['new_position'];
-            }
-
-            $cardsToMove = $task->cards->whereBetween('order', [$startIndex, $endIndex]);
-
-            $this->reorderCards($cardsToMove, ($direction === 'descending' ? -1 : 1));
-
-            $selectedCard->update([
-                'order' => (int)$attributes['new_position']
-            ]);
-
+            if ($card->order === $attributes['new_position']) return response(null, 400); // card hasn't moved
+            $this->updateOrderInSingleList($attributes, $card);
         } else {
-            // Multiple Lists
             $this->authorize('owns_task', Task::find($attributes['end_list']));
-
-            $selectedCard = $card;
-            $task = $selectedCard->task;
-            $board = $task->board;
-
-            $cardsInStartList = Card::where('task_id', '=', $selectedCard->task_id)
-                ->where('order', '>', $selectedCard->order)
-                ->orderBy('order')->get();
-
-            $cardsInEndList = Card::where('task_id', '=', $attributes['end_list'])
-                ->where('order', '>=', $attributes['new_position'])
-                ->orderBy('order')->get();
-                
-            $this->reorderCards($cardsInStartList, -1);
-            $this->reorderCards($cardsInEndList, 1);
-
-            $selectedCard->update([
-                'task_id' => $attributes['end_list'],
-                'order' => $attributes['new_position']
-            ]);
+            $this->updateOrderInMultipleLists($attributes, $card);
         }
+
+        return response(null, 200);
     }
 
     private function validateCard($request)
@@ -164,5 +117,50 @@ class CardsController extends Controller
                 'order' => $card->order + $change
             ]);
         }
+    }
+
+    private function updateOrderInSingleList($attributes, $card) {
+        $direction;
+        $selectCardsToUpdateOrder = [];
+
+        if ((int)$card->order < (int)$attributes['new_position']) {
+            $direction = -1; // descending
+            $selectCardsToUpdateOrder[0] = (int)$card->order +1;
+            $selectCardsToUpdateOrder[1] = (int)$attributes['new_position'];
+        } else {
+            $direction = 1; // ascending
+            $selectCardsToUpdateOrder[0] = (int)$card->order -1;
+            $selectCardsToUpdateOrder[0] = (int)$attributes['new_position'];
+        }
+
+        $cardsToUpdateOrder = Card::where('task_id', '=', $card->task_id)
+            ->whereBetween('order', $selectCardsToUpdateOrder)
+            ->orderBy('order')->get();
+
+        $this->reorderCards($cardsToUpdateOrder, $direction);
+
+        $card->update([ 'order' => (int)$attributes['new_position'] ]);
+    }
+
+    private function updateOrderInMultipleLists($attributes, $card) {
+        $task = $card->task;
+        $board = $task->board;
+
+        $cardsInStartListToReorder = Card::where('task_id', '=', $card->task_id)
+            ->where('order', '>', $card->order)
+            ->orderBy('order')->get();
+
+        $cardsInEndListToReorder = Card::where('task_id', '=', $attributes['end_list'])
+            ->where('order', '>=', $attributes['new_position'])
+            ->orderBy('order')->get();
+            
+        $this->reorderCards($cardsInStartListToReorder, -1);
+        $this->reorderCards($cardsInEndListToReorder, 1);
+
+        $card->update([
+            'task_id' => $attributes['end_list'],
+            'order' => $attributes['new_position']
+        ]);
+        
     }
 }

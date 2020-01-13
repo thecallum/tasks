@@ -15,7 +15,7 @@
 <body>
     @include('layout.header')
 
-    <div class="container mx-auto px-6 mt-6">
+    <div>
         @yield('content')
     </div>
 

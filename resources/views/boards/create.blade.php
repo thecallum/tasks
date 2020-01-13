@@ -1,29 +1,26 @@
 @extends('layout.main')
 
 @section('content')
-    <h1>Create a new Board</h1>
+    <section class="section">
+        <h1 class="title">Create a new Board</h1>
 
-    <div>
-        <formaction="/boards" method="POST">
+        <form action="/boards" method="POST">
             @csrf
 
-            <div>
-                <label for="username">
-                    Name
-                </label>
-                <input name="name" type="text" placeholder="Board Name">
+            <div class="field">
+                <label class="label">Name</label>
+                <div class="control">
+                    <input class="input" name="name" type="text" placeholder="Board Name">
+                </div>
             </div>
 
-            <div>
-                <button type="submit" href="/boards/create">Create New Board</button>
+            <div class="control">
+                <button class="button is-primary" type="submit">Create New Board</button>
             </div>
 
-            @if ($errors)
-                @foreach($errors->all() as $error)
-                    <p>{{ $error }}</p>
-                @endforeach
-            @endif
+            @include('components.error')
+
         </form>
-    </div>
 
+    </section>
 @endsection

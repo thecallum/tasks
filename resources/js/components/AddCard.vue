@@ -2,19 +2,12 @@
     <div :data-name="listName">
         <p>Add Card</p>
 
-        <button v-if="!focus" class="button" @click="addCard">Add Card</button>
+        <button v-if="!focus" @click="addCard">Add Card</button>
 
         <form v-if="focus" @submit="handleSubmit" :data-name="listName">
-            <input
-                type="text"
-                placeholder="Name"
-                v-model="form.name"
-                class="input"
-            />
+            <input type="text" placeholder="Name" v-model="form.name" />
 
-            <button class="button" type="submit">
-                Add Card
-            </button>
+            <button type="submit">Add Card</button>
 
             <ul>
                 <li v-for="error in form.errors">{{ error[0] }}</li>
@@ -93,20 +86,3 @@ export default {
     }
 };
 </script>
-
-<style scoped>
-.button {
-    width: 100%;
-    border: none;
-    background: #000;
-    color: #fff;
-    padding: 15px;
-}
-
-.input {
-    border: 1px solid #333;
-    border-radius: 3px;
-    margin-bottom: 15px;
-    width: 100%;
-}
-</style>

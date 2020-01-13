@@ -2,7 +2,7 @@
     <div>
         <create-list :board-id="boardId"></create-list>
 
-        <div class="list-container">
+        <div>
             <List
                 v-for="(list, key) in cards"
                 :list="lists[key]"
@@ -169,10 +169,3 @@ export default {
     }
 };
 </script>
-
-<style lang="scss" scoped>
-.list-container {
-    margin-left: -30px !important;
-    padding: 0 !important;
-}
-</style>

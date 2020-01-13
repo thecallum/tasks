@@ -1,12 +1,12 @@
 <template>
-    <div class="list-item card">
+    <div>
         <span>{{ card.name }} | {{ card.order }}</span>
         <div>
-            <button class="button-edit" @click="editCard">Edit</button>
-            <button class="button-delete" @click="deleteCard"></button>
+            <button @click="editCard">Edit</button>
+            <button @click="deleteCard"></button>
         </div>
 
-        <div v-if="toggled" class="card-details">
+        <div v-if="toggled">
             <h3>Card Details</h3>
 
             <form @submit="handleSubmit">
@@ -110,52 +110,3 @@ export default {
     }
 };
 </script>
-
-<style scoped lang="scss">
-.card {
-    padding: 15px 30px 15px 15px;
-    position: relative;
-
-    &-details {
-        margin-top: 15px;
-        background: rgba(255, 255, 255, 0.2);
-    }
-}
-
-.button-delete {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-
-    background: hsl(0, 50%, 60%);
-    color: white;
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
-
-    &:hover {
-        background: hsl(0, 50%, 40%);
-    }
-
-    &::after {
-        content: "X";
-        position: absolute;
-        display: block;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        vertical-align: center;
-    }
-}
-
-.button-edit {
-    background: hsl(150, 80%, 30%);
-    padding: 3px 6px;
-    border-radius: 4px;
-
-    &:hover {
-        background: hsl(150, 80%, 40%);
-    }
-}
-</style>

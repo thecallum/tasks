@@ -15,10 +15,11 @@
 <body>
     @include('layout.header')
 
-    <div>
+    <div class="container">
         @yield('content')
     </div>
 
+    <script src="/js/navbar.js"></script>
     @yield('javascript')
 </body>
 </html>

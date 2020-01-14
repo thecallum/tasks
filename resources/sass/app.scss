@@ -3,3 +3,21 @@
 // Bulma
 @import "../../node_modules/bulma/bulma";
 @import "../../node_modules/bulma-helpers/bulma-helpers";
+
+.task-container {
+    white-space: nowrap;
+    overflow-x: auto;
+    background: red;
+    padding: 30px;
+}
+
+.task {
+    width: 100%;
+    max-width: 400px;
+    display: inline-block;
+    vertical-align: top;
+
+    &:not(:first-child) {
+        margin-left: 30px;
+    }
+}

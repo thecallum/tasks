@@ -1,8 +1,9 @@
 <template>
     <div>
+        <!--
         <create-list :board-id="boardId"></create-list>
-
-        <div>
+-->
+        <div class="task-container">
             <List
                 v-for="(list, key) in cards"
                 :list="lists[key]"

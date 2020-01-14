@@ -1,11 +1,15 @@
 <template>
     <div>
         <span>{{ card.name }} | {{ card.order }}</span>
+
+        <!--
         <div>
             <button @click="editCard">Edit</button>
             <button @click="deleteCard"></button>
         </div>
 
+    -->
+        <!--
         <div v-if="toggled">
             <h3>Card Details</h3>
 
@@ -35,6 +39,8 @@
                 </div>
             </form>
         </div>
+
+        -->
     </div>
 </template>
 

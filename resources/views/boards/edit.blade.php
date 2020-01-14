@@ -1,30 +1,26 @@
 @extends('layout.main')
 
 @section('content')
-    <h1>Edit Board</h1>
+    <section class="section">
+        <h1 class="title">Edit Board</h1>
 
-    <div>
         <form action="/boards/{{ $board->id }}" method="POST">
             @csrf
             @method('PATCH')
 
-            <div class="mb-4">
-                <label for="username">
-                    Name
-                </label>
-                <input name="name" type="text" placeholder="Board Name" value={{ $board->name }}>
+            <div class="field">
+                <label class="label">Name</label>
+                <div class="control">
+                    <input class="input" name="name" type="text" placeholder="Board Name" value="{{ $board->name }}">
+                </div>
             </div>
 
-            <div class="mb-4">
-                <button type="submit" href="/boards/create">Update Board</button>
+            <div class="control">
+                <button class="button is-primary" type="submit">Update Board</button>
             </div>
 
-            @if ($errors)
-                @foreach($errors->all() as $error)
-                    <p>{{ $error }}</p>
-                @endforeach
-            @endif
+            @include('components.error')
+
         </form>
-    </div>
-
+    </section>
 @endsection

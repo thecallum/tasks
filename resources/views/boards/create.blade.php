@@ -21,6 +21,5 @@
             @include('components.error')
 
         </form>
-
     </section>
 @endsection

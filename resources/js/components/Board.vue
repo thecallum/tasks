@@ -14,6 +14,8 @@
                 :card-added-to-new-list="cardAddedToNewList"
             ></List>
         </div>
+
+        <EditCardModal v-if="modalActive" :card="modalCard"></EditCardModal>
     </div>
 </template>
 
@@ -21,6 +23,7 @@
 const List = require("./List.vue").default;
 const Form = require("../Form");
 const CreateList = require("./CreateList.vue").default;
+const EditCardModal = require("./EditCardModal.vue").default;
 const eventBus = require("../eventBus.js");
 
 export default {
@@ -36,10 +39,14 @@ export default {
     },
     components: {
         List,
-        CreateList
+        CreateList,
+        EditCardModal
     },
     data() {
         return {
+            modalActive: false,
+            modalCard: {},
+
             cards: {},
             lists: {},
             lastRemoved: null,
@@ -64,6 +71,8 @@ export default {
             eventBus.$on("deleteList", this.deleteList);
             eventBus.$on("createList", this.createList);
             eventBus.$on("cardDragged", this.cardDragged);
+
+            eventBus.$on("toggleModal", this.toggleModal);
         },
         initializeCards() {
             const lists = this.listData;
@@ -166,6 +175,22 @@ export default {
                 .catch(error => {
                     console.log("error", error);
                 });
+        },
+
+        /*
+        =============
+        Modal methods
+        =============
+        */
+
+        toggleModal(showModal, card) {
+            if (showModal) {
+                this.modalCard = card;
+                this.modalActive = true;
+            } else {
+                this.modalActive = false;
+                this.modalCard = {};
+            }
         }
     }
 };

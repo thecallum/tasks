@@ -1,16 +1,17 @@
 <template>
-    <div>
-        <span>{{ card.name }} | {{ card.order }}</span>
+    <div class="list-card box">
+        <div class="list-card-body">
+            <span>{{ card.name }}</span>
 
-        <!--
-        <div>
-            <button @click="editCard">Edit</button>
-            <button @click="deleteCard"></button>
+            <span>
+                <button class="button" @click="editCard">Edit</button>
+                <button class="button is-danger" @click="deleteCard">
+                    Delete
+                </button>
+            </span>
         </div>
 
-    -->
-        <!--
-        <div v-if="toggled">
+        <div class="list-card-edit" v-if="toggled">
             <h3>Card Details</h3>
 
             <form @submit="handleSubmit">
@@ -35,12 +36,12 @@
                 </ul>
 
                 <div>
-                    <button type="submit">Update Card</button>
+                    <button class="button is-primary" type="submit">
+                        Update Card
+                    </button>
                 </div>
             </form>
         </div>
-
-        -->
     </div>
 </template>
 
@@ -82,15 +83,17 @@ export default {
             this.toggled = !this.toggled;
         },
         deleteCard() {
-            this.deleteForm
-                .delete("/cards/" + this.card.id)
-                .then(response => {
-                    console.log("response", response);
-                    eventBus.$emit("deleteCard", this.card, this.listName);
-                })
-                .catch(error => {
-                    console.log("error", error);
-                });
+            if (confirm("Ar you sure you want to delete this card?")) {
+                this.deleteForm
+                    .delete("/cards/" + this.card.id)
+                    .then(response => {
+                        console.log("response", response);
+                        eventBus.$emit("deleteCard", this.card, this.listName);
+                    })
+                    .catch(error => {
+                        console.log("error", error);
+                    });
+            }
         },
 
         handleSubmit(e) {

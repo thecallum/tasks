@@ -2,7 +2,7 @@
     <div class="card task has-background-white-ter">
         <header class="card-header">
             <p class="card-header-title">
-                {{ list.name }}
+                {{ list.name }} | <div class="button is-danger" @click="deleteList">Delete</div>
             </p>
             <a href="#" class="card-header-icon" aria-label="more options">
                 <span class="icon">
@@ -12,35 +12,25 @@
         </header>
 
         <div class="card-content">
-            <div class="box has-margin-bottom-10" v-for="card in localCards">
-                hjk
-            </div>
+            <Draggable
+                :group="group"
+                @end="e => cardDragEnd(e, list)"
+                @start="e => cardDragStart(e, list)"
+                @add="e => cardAddedToNewList(e, list)"
+                animation="200"
+                draggable=".list-card"
+                v-model="localCards"
+            >
+                <Card
+                    v-for="card in localCards"
+                    :key="card.value"
+                    :card="card"
+                    :list-name="list.name"
+                ></Card>
+            </Draggable>
+
+            <add-card :list-name="list.name" :list-id="list.id"></add-card>
         </div>
-
-        <!--
-
-        <div @click="deleteList"></div>
-
-        <Draggable
-            :group="group"
-            @end="e => cardDragEnd(e, list)"
-            @start="e => cardDragStart(e, list)"
-            @add="e => cardAddedToNewList(e, list)"
-            animation="200"
-            draggable=".list-item"
-            v-model="localCards"
-        >
-            <Card
-                v-for="card in localCards"
-                :key="card.value"
-                :card="card"
-                :list-name="list.name"
-            ></Card>
-        </Draggable>
-
-        <add-card :list-name="list.name" :list-id="list.id"></add-card>
-
-        -->
     </div>
 </template>
 

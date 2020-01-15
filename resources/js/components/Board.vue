@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="height: 100%">
         <!--
         <create-list :board-id="boardId"></create-list>
 -->

@@ -1,23 +1,37 @@
 <template>
     <div :data-name="listName">
-        <p>Add Card</p>
+        <div v-if="!focus">
+            <button class="add-card-button" @click="addCard">
+                Add another card
+            </button>
+        </div>
 
-        <button v-if="!focus" @click="addCard">Add Card</button>
+        <div v-else class="add-card-save">
+            <textarea
+                class="textarea"
+                placeholder="Enter a title for this card..."
+                v-model="form.name"
+            ></textarea>
 
-        <form v-if="focus" @submit="handleSubmit" :data-name="listName">
-            <input type="text" placeholder="Name" v-model="form.name" />
-
-            <button type="submit">Add Card</button>
-
-            <ul>
-                <li v-for="error in form.errors">{{ error[0] }}</li>
-            </ul>
-        </form>
+            <div class="add-card-options">
+                <form @submit="handleSubmit">
+                    <button class="button is-success" type="submit">
+                        Add Card
+                    </button>
+                    <button
+                        type="button"
+                        class="add-card-cancel"
+                        @click="cancel"
+                    >
+                        <i class="fas fa-times"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
-const axios = require("axios");
 const Form = require("../Form.js");
 const eventBus = require("../eventBus.js");
 
@@ -37,9 +51,12 @@ export default {
             if (!this.focus) {
                 this.focus = true;
                 console.log("add card", this.focus);
-
-                this.createClickOutEventListener();
+                // this.createClickOutEventListener();
             }
+        },
+        cancel() {
+            this.focus = false;
+            this.form.reset();
         },
         handleSubmit(e) {
             e.preventDefault();
@@ -53,36 +70,38 @@ export default {
 
                     const newCard = response.data;
                     eventBus.$emit("addCard", newCard, this.listName);
+                    this.focus = false;
                 })
                 .catch(error => {
+                    // console.log({ error });
                     console.log("error", error.response.data.error);
                 });
-        },
-        createClickOutEventListener() {
-            setTimeout(() =>
-                window.addEventListener("click", this.clickOutEventHandler)
-            );
-        },
-        removeClickOutEventListener() {
-            window.removeEventListener("click", this.clickOutEventHandler);
-        },
-        clickOutEventHandler(e) {
-            if (
-                (e.target.dataset !== undefined &&
-                    e.target.dataset.name === this.listName) ||
-                (!!e.target.parentElement &&
-                    e.target.parentElement.dataset !== undefined &&
-                    e.target.parentElement.dataset.name === this.listName)
-            ) {
-                // Inside element, dont click out
-                return;
-            }
-
-            // user clicked out
-            this.removeClickOutEventListener();
-            this.focus = false;
-            this.form.reset();
         }
+        // createClickOutEventListener() {
+        //     setTimeout(() =>
+        //         window.addEventListener("click", this.clickOutEventHandler)
+        //     );
+        // },
+        // removeClickOutEventListener() {
+        //     window.removeEventListener("click", this.clickOutEventHandler);
+        // },
+        // clickOutEventHandler(e) {
+        //     if (
+        //         (e.target.dataset !== undefined &&
+        //             e.target.dataset.name === this.listName) ||
+        //         (!!e.target.parentElement &&
+        //             e.target.parentElement.dataset !== undefined &&
+        //             e.target.parentElement.dataset.name === this.listName)
+        //     ) {
+        //         // Inside element, dont click out
+        //         return;
+        //     }
+
+        //     // user clicked out
+        //     this.removeClickOutEventListener();
+        //     this.focus = false;
+        //     this.form.reset();
+        // }
     }
 };
 </script>

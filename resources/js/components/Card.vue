@@ -1,11 +1,9 @@
 <template>
-    <div class="list-card box">
+    <div class="list-card box" @click="editCard">
         <div class="list-card-body">
             <span>{{ card.name }}</span>
 
-            <span>
-                <button class="button" @click="editCard">Edit</button>
-            </span>
+            <i class="fas fa-pen list-card-icon"></i>
         </div>
     </div>
 </template>

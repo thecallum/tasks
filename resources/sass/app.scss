@@ -7,7 +7,7 @@
 .task-container {
     white-space: nowrap;
     overflow-x: auto;
-    background: red;
+    // background: red;
     padding: 30px;
     height: 100%;
 }
@@ -35,7 +35,7 @@ body {
 }
 
 .page-content {
-    background: purple;
+    // background: purple;
     flex-grow: 1;
     display: flex;
     flex-direction: column;
@@ -47,12 +47,25 @@ body {
 
 .list-card {
     margin-bottom: 5px;
+    cursor: pointer;
+    &:hover {
+        background: #f6f6f6;
+
+        .list-card-icon {
+            display: inline-block;
+        }
+    }
 }
 
 .list-card-body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.list-card-icon {
+    color: #999;
+    // display: none;
 }
 
 .add-card-button,

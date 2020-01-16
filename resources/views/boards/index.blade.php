@@ -1,18 +1,22 @@
 @extends('layout.main')
 
-
-
 @section('content')
 
-    <h1>Home</h1>
+    <div class="container">
+        <section class="section">
+            <h1 class="title">Boards</h1>
+            <h2 class="subtitle">View boards</h2>
 
-    <p>View boards</p>
+            <div class="list is-hoverable">
+                @foreach($boards as $board)
+                    <a href="/boards/{{ $board->id }}" class="list-item has-background-white has-text-dark">    
+                        {{ $board->name }}
+                    </a>
+                @endforeach
+            </div>
 
-    <ul>
-        @foreach($boards as $board)
-            <li><a href="/boards/{{ $board->id }}">{{ $board->name }}</a></li>
-        @endforeach
-    </ul>
+            <a class="button is-primary" href="/boards/create">Create New Board</a>
+        </section>
+    </div>
 
-    <a class="font-bold py-2 px-4 rounded bg-blue-500 text-white hover:bg-blue-700" href="/boards/create">Create New Board</a>
 @endsection

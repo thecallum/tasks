@@ -3,9 +3,12 @@
 
 @section('content')
 
-    <h1>Welcome to tasks</h1>
+    <div class="container">
+        <section class="section">
+            <h1 class="title">Welcome to tasks</h1>
 
-
-    <p><a href="/register">Register here</a></p>
+            <p><a class="button is-primary" href="/register">Register here</a></p>
+        </section>
+    </div>
 
 @endsection

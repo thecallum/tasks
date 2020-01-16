@@ -1,18 +1,24 @@
 <template>
-    <div>
-        <div class="list" :class="{ empty: cards.length == 0 }">
-            <h1>{{ list.name }}</h1>
+    <div class="card task has-background-white-ter">
+        <header class="card-header">
+            <p class="card-header-title">
+                {{ list.name }} | <div class="button is-danger" @click="deleteList">Delete</div>
+            </p>
+            <a href="#" class="card-header-icon" aria-label="more options">
+                <span class="icon">
+                    <i class="fas fa-ellipsis-h"></i>
+                </span>
+            </a>
+        </header>
 
-            <div class="delete-list" @click="deleteList"></div>
-
+        <div class="card-content">
             <Draggable
                 :group="group"
                 @end="e => cardDragEnd(e, list)"
                 @start="e => cardDragStart(e, list)"
                 @add="e => cardAddedToNewList(e, list)"
                 animation="200"
-                ghost-class="ghost"
-                draggable=".list-item"
+                draggable=".list-card"
                 v-model="localCards"
             >
                 <Card
@@ -81,24 +87,3 @@ export default {
     }
 };
 </script>
-
-<style lang="scss" scoped>
-.list {
-    padding: 60px 30px 30px;
-    background: hsl(200, 50%, 50%);
-    margin-left: 30px;
-    position: relative;
-    width: 300px;
-}
-
-.delete-list {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    width: 15px;
-    height: 15px;
-    border-radius: 50%;
-    background: hsl(0, 50%, 50%);
-    cursor: pointer;
-}
-</style>

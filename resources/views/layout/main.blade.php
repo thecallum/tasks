@@ -10,15 +10,23 @@
 
     @yield('header')
 
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css" integrity="sha384-REHJTs1r2ErKBuJB0fCK99gCYsVjwxHrSU0N7I1zl9vZbggVJXRMsv/sLlOAGb4M" crossorigin="anonymous">
     <link rel="stylesheet" href="/css/app.css">
 </head>
 <body>
-    @include('layout.header')
+   
+    <div class="page-container">
 
-    <div class="container mx-auto px-6 mt-6">
-        @yield('content')
+        @include('layout.header')
+
+        <div class="page-content">
+            @yield('content')
+        </div>
+
     </div>
 
+
+    <script src="/js/navbar.js"></script>
     @yield('javascript')
 </body>
 </html>

@@ -1,25 +1,17 @@
 <template>
-    <div class="create-list">
+    <div>
         <form @submit="handleSubmit">
-            <div class="mb-4">
-                <label class="block text-gray-700 text-sm font-bold mb-2">
-                    Name
-                </label>
+            <div>
+                <label>Name</label>
                 <input
                     v-model="form.name"
-                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     name="name"
                     type="text"
                     placeholder="List Name"
                 />
             </div>
 
-            <button
-                type="submit"
-                class="font-bold py-2 px-4 rounded bg-green-500 text-white hover:bg-green-700"
-            >
-                Create List
-            </button>
+            <button type="submit">Create List</button>
         </form>
 
         <ul>
@@ -62,9 +54,3 @@ export default {
     }
 };
 </script>
-
-<style lang="scss" scoped>
-.create-list {
-    margin-bottom: 30px;
-}
-</style>

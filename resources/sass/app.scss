@@ -1,103 +1,133 @@
-// Variables
-@import "variables";
+@charset "utf-8";
 
-// Tailwind
-@import "../../node_modules/tailwindcss/dist/tailwind.css";
+// Bulma
+@import "../../node_modules/bulma/bulma";
+@import "../../node_modules/bulma-helpers/bulma-helpers";
 
-@import "./board";
-
-html {
-    font-family: sans-serif;
-    font-size: 62.5%;
+.task-container {
+    white-space: nowrap;
+    overflow-x: auto;
+    // background: red;
+    padding: 30px;
+    height: 100%;
 }
 
+.task {
+    width: 100%;
+    max-width: 400px;
+    display: inline-block;
+    vertical-align: top;
+
+    &:not(:first-child) {
+        margin-left: 30px;
+    }
+}
+
+html,
 body {
-    background-color: $body-bg;
-
-    font-size: 1.6rem;
+    height: 100%;
 }
 
-h1 {
-    font-size: 4.2rem;
+.page-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
-*,
-*::before,
-*::after {
-    box-sizing: border-box;
+.page-content {
+    // background: purple;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
 }
 
-body {
-    font-family: sans-serif;
+.container {
+    width: 100%;
 }
 
-// .list {
-//     height: 400px;
-//     overflow-x: auto;
+.list-card {
+    margin-bottom: 5px;
+    cursor: pointer;
+    &:hover {
+        background: #f6f6f6;
 
-//     &-container {
-//         margin-left: -30px;
-//         padding: 30px 30px 0;
-//         white-space: nowrap;
-//     }
+        .list-card-icon {
+            display: inline-block;
+        }
+    }
+}
 
-//     &-item {
-//         background-color: #ebecf0;
-//         width: 250px;
-//         display: inline-block;
-//         margin-left: 30px;
-//         flex-shrink: 0;
-//         padding: 15px;
-//         border-radius: 3px;
-//         vertical-align: top;
-//     }
+.list-card-body {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
-//     &-title {
-//         margin: 0;
-//         font-weight: normal;
-//     }
-// }
+.list-card-icon {
+    color: #999;
+    // display: none;
+}
 
-// .card {
-//     &-list {
-//         margin: 0 0 15px;
-//         padding: 0;
-//     }
-//     &-item {
-//         margin: 15px 0 0;
-//         padding: 10px;
-//         border-radius: 5px;
-//         background: #fff;
-//         display: block;
-//         cursor: pointer;
+.add-card-button,
+.add-card-save,
+.add-card-options {
+    margin-top: 15px;
+}
 
-//         &:hover {
-//             background: #f9f9f9;
-//         }
-//     }
+.add-card-button {
+    width: 100%;
 
-//     &-add {
-//         &-button {
-//             background: transparent;
-//             border: none;
-//             cursor: pointer;
-//             width: 100%;
-//             padding: 10px;
-//             border-radius: 5px;
-//             text-align: left;
-//             font-size: 18px;
+    border: none;
+    background: none;
+    font-size: 18px;
+    text-align: left;
+    color: #999;
 
-//             &::before {
-//                 content: "+";
-//                 margin-right: 10px;
-//                 font-size: 20px;
-//                 font-weight: bold;
-//                 line-height: 20px;
-//             }
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
 
-//             &:hover {
-//                 background: darken(#ebecf0, 10%);
-//             }
-//         }
-//     }
-// }
+    &:hover {
+        background: #ddd;
+        color: #666;
+    }
+
+    &::before {
+        content: "\f067";
+        font-family: "Font Awesome 5 Free";
+        font-weight: 900;
+        margin-right: 10px;
+    }
+}
+
+.add-card-save {
+    background: transparent;
+
+    .textarea {
+        min-height: 80px;
+        max-height: 160px;
+
+        box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, 0.1),
+            0 0px 0 1px rgba(10, 10, 10, 0.02);
+
+        border: none;
+        resize: none;
+    }
+}
+
+.add-card-options {
+    display: flex;
+}
+
+.add-card-cancel {
+    margin-left: 15px;
+    background: transparent;
+    border: none;
+    font-size: 28px;
+    color: #666;
+    cursor: pointer;
+
+    &:hover {
+        color: #000;
+    }
+}

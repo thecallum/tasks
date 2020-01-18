@@ -1,17 +1,18 @@
 <template>
     <div style="height: 100%">
         <div class="task-container">
-            <List
-                v-for="(list, key) in cards"
-                :list="lists[key]"
-                :cards="list"
-                group="list"
-                :card-drag-end="cardDragEnd"
-                :card-drag-start="cardDragStart"
-                :card-added-to-new-list="cardAddedToNewList"
-            ></List>
+            <Draggable group="lists" handle=".card-header">
+                <List
+                    v-for="(list, key) in cards"
+                    :list="lists[key]"
+                    :cards="list"
+                    :card-drag-end="cardDragEnd"
+                    :card-drag-start="cardDragStart"
+                    :card-added-to-new-list="cardAddedToNewList"
+                ></List>
 
-            <AddList :board-id="boardId"></AddList>
+                <AddList :board-id="boardId"></AddList>
+            </Draggable>
         </div>
 
         <EditCardModal v-if="modalActive" :card="modalCard"></EditCardModal>
@@ -19,6 +20,7 @@
 </template>
 
 <script>
+const Draggable = require("vuedraggable");
 const List = require("./List.vue").default;
 const Form = require("../Form");
 const AddList = require("./AddList.vue").default;
@@ -30,6 +32,8 @@ export default {
         this.initializeCards();
         this.initializeLists();
         this.initializeEventHandlers();
+
+        console.table(this.listData);
     },
     props: {
         listData: Array,
@@ -39,7 +43,9 @@ export default {
     components: {
         List,
         EditCardModal,
-        AddList
+        AddList,
+        EditCardModal,
+        Draggable
     },
     data() {
         return {

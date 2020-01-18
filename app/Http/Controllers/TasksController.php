@@ -42,6 +42,11 @@ class TasksController extends Controller
 
         $attributes = $this->validateTask($request);
 
+        // Count number of tasks
+        $taskCount = $board->tasks->count();
+
+        return $taskCount;
+
         $attributes['board_id'] = $board->id;
         // Need to auto increment this...
         $attributes['order'] = 1;

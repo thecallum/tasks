@@ -1,8 +1,5 @@
 <template>
     <div style="height: 100%">
-        <!--
-        <create-list :board-id="boardId"></create-list>
--->
         <div class="task-container">
             <List
                 v-for="(list, key) in cards"
@@ -13,6 +10,8 @@
                 :card-drag-start="cardDragStart"
                 :card-added-to-new-list="cardAddedToNewList"
             ></List>
+
+            <AddList :board-id="boardId"></AddList>
         </div>
 
         <EditCardModal v-if="modalActive" :card="modalCard"></EditCardModal>
@@ -22,7 +21,7 @@
 <script>
 const List = require("./List.vue").default;
 const Form = require("../Form");
-const CreateList = require("./CreateList.vue").default;
+const AddList = require("./AddList.vue").default;
 const EditCardModal = require("./EditCardModal.vue").default;
 const eventBus = require("../eventBus.js");
 
@@ -39,8 +38,8 @@ export default {
     },
     components: {
         List,
-        CreateList,
-        EditCardModal
+        EditCardModal,
+        AddList
     },
     data() {
         return {
@@ -105,7 +104,9 @@ export default {
             this.cards = { ...this.cards, [list.name]: [] };
         },
         deleteList(list) {
-            delete this.cards[list.name];
+            const newCards = JSON.parse(JSON.stringify(this.cards));
+            delete newCards[list.name];
+            this.cards = newCards;
         },
         updateCard(updatedCard, listName) {
             this.cards[listName] = this.cards[listName].map(card => {

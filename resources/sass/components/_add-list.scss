@@ -1,25 +1,26 @@
-.add-card {
-    &-button,
-    &-save,
-    &-options {
-        margin-top: 15px;
-    }
+.add-list {
+    width: 100%;
+    max-width: 400px;
+    display: inline-block;
+    vertical-align: top;
+    margin-left: 30px;
 
     &-button {
-        width: 100%;
-
         border: none;
         background: none;
         font-size: 18px;
         text-align: left;
-        color: #999;
+        color: #888;
+        width: 100%;
+        background: whitesmoke;
 
         padding: 10px;
         border-radius: 5px;
         cursor: pointer;
 
         &:hover {
-            background: #ddd;
+            // background: #ddd;
+            background: lighten(whitesmoke, 2%);
             color: #666;
         }
 
@@ -30,26 +31,18 @@
             margin-right: 10px;
         }
     }
+
     &-save {
-        background: transparent;
-
-        .textarea {
-            min-height: 80px;
-            max-height: 160px;
-
-            box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, 0.1),
-                0 0px 0 1px rgba(10, 10, 10, 0.02);
-
-            border: none;
-            resize: none;
-        }
+        padding: 1.5rem;
+        // background: #eee;
     }
 
     &-options {
         display: flex;
+        margin-top: 15px;
     }
 
-    &-cancel {
+    &-close {
         margin-left: 15px;
     }
 }

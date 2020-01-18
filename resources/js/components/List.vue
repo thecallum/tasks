@@ -3,16 +3,16 @@
         <header class="card-header">
             <p class="card-header-title">{{ list.name }}</p>
 
-            <div @click="openPopper" class="card-header-icon yee">
+            <div @click="openMenu" class="card-header-icon yee">
                 <span class="icon">
                     <i class="fas fa-ellipsis-h"></i>
                 </span>
 
-                <PopoverMenu
-                    :delete-list="deleteList"
-                    :close="closePopper"
-                    v-if="showPopper"
-                ></PopoverMenu>
+                <ListMenu
+                    :list="list"
+                    :close="closeMenu"
+                    v-if="showMenu"
+                ></ListMenu>
             </div>
         </header>
 
@@ -43,16 +43,14 @@
 const Draggable = require("vuedraggable");
 const AddCard = require("./AddCard.vue").default;
 const Card = require("./Card.vue").default;
-const PopoverMenu = require("./PopoverMenu.vue").default;
-const Form = require("../Form.js");
-const eventBus = require("../eventBus.js");
+const ListMenu = require("./ListMenu.vue").default;
 
 export default {
     components: {
         Draggable,
         AddCard,
         Card,
-        PopoverMenu
+        ListMenu
     },
     props: {
         list: Object,
@@ -74,32 +72,15 @@ export default {
     },
     data() {
         return {
-            form: new Form(),
-            showPopper: false
+            showMenu: false
         };
     },
-    mounted() {
-        // tippy('.yee', {
-    },
     methods: {
-        closePopper() {
-            this.showPopper = false;
+        openMenu() {
+            this.showMenu = true;
         },
-        openPopper() {
-            this.showPopper = true;
-        },
-        deleteList() {
-            if (confirm("Do you want to delete the list?")) {
-                this.form
-                    .delete("/tasks/" + this.list.id)
-                    .then(response => {
-                        console.log("response", response);
-                        eventBus.$emit("deleteList", this.list);
-                    })
-                    .catch(error => {
-                        console.log("error", error);
-                    });
-            }
+        closeMenu() {
+            this.showMenu = false;
         }
     }
 };

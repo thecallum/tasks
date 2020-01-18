@@ -25,6 +25,7 @@
         "vuedraggable": "^2.23.2"
     },
     "dependencies": {
-        "bulma-helpers": "^0.3.8"
+        "bulma-helpers": "^0.3.8",
+        "vue-clickaway": "^2.2.2"
     }
 }

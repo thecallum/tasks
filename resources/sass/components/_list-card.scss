@@ -1,0 +1,22 @@
+.list-card {
+    margin-bottom: 5px;
+    cursor: pointer;
+    &:hover {
+        background: #f6f6f6;
+
+        .list-card-icon {
+            display: inline-block;
+        }
+    }
+
+    &-body {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    &-icon {
+        color: #999;
+        position: relative;
+    }
+}

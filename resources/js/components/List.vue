@@ -1,14 +1,19 @@
 <template>
     <div class="card task has-background-white-ter">
         <header class="card-header">
-            <p class="card-header-title">
-                {{ list.name }} | <div class="button is-danger" @click="deleteList">Delete</div>
-            </p>
-            <a href="#" class="card-header-icon" aria-label="more options">
+            <p class="card-header-title">{{ list.name }}</p>
+
+            <div @click="openPopper" class="card-header-icon yee">
                 <span class="icon">
                     <i class="fas fa-ellipsis-h"></i>
                 </span>
-            </a>
+
+                <PopoverMenu
+                    :delete-list="deleteList"
+                    :close="closePopper"
+                    v-if="showPopper"
+                ></PopoverMenu>
+            </div>
         </header>
 
         <div class="card-content">
@@ -38,6 +43,7 @@
 const Draggable = require("vuedraggable");
 const AddCard = require("./AddCard.vue").default;
 const Card = require("./Card.vue").default;
+const PopoverMenu = require("./PopoverMenu.vue").default;
 const Form = require("../Form.js");
 const eventBus = require("../eventBus.js");
 
@@ -45,7 +51,8 @@ export default {
     components: {
         Draggable,
         AddCard,
-        Card
+        Card,
+        PopoverMenu
     },
     props: {
         list: Object,
@@ -67,10 +74,20 @@ export default {
     },
     data() {
         return {
-            form: new Form()
+            form: new Form(),
+            showPopper: false
         };
     },
+    mounted() {
+        // tippy('.yee', {
+    },
     methods: {
+        closePopper() {
+            this.showPopper = false;
+        },
+        openPopper() {
+            this.showPopper = true;
+        },
         deleteList() {
             if (confirm("Do you want to delete the list?")) {
                 this.form

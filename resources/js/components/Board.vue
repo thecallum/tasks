@@ -104,7 +104,9 @@ export default {
             this.cards = { ...this.cards, [list.name]: [] };
         },
         deleteList(list) {
-            delete this.cards[list.name];
+            const newCards = JSON.parse(JSON.stringify(this.cards));
+            delete newCards[list.name];
+            this.cards = newCards;
         },
         updateCard(updatedCard, listName) {
             this.cards[listName] = this.cards[listName].map(card => {

@@ -16,18 +16,39 @@
 
 <script>
 import { mixin as clickaway } from "vue-clickaway";
+const eventBus = require("../eventBus.js");
+const Form = require("../Form.js");
 
 export default {
     mixins: [clickaway],
+    data() {
+        return {
+            form: new Form()
+        };
+    },
     methods: {
         exit() {
             // alert("exit");
             this.close();
+        },
+        deleteList() {
+            if (confirm("Do you want to delete the list?")) {
+                this.form
+                    .delete("/tasks/" + this.list.id)
+                    .then(response => {
+                        console.log("response", response);
+                        eventBus.$emit("deleteList", this.list);
+                        this.close();
+                    })
+                    .catch(error => {
+                        console.log("error", error);
+                    });
+            }
         }
     },
     props: {
         close: Function,
-        deleteList: Function
+        list: Object
     }
 };
 </script>

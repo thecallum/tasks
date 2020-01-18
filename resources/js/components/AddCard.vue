@@ -1,7 +1,7 @@
 <template>
-    <div :data-name="listName">
-        <div v-if="!focus">
-            <button class="add-card-button" @click="addCard">
+    <div :data-name="listName" v-on-clickaway="close">
+        <div v-if="!active">
+            <button class="add-card-button" @click="open">
                 Add another card
             </button>
         </div>
@@ -11,6 +11,7 @@
                 class="textarea"
                 placeholder="Enter a title for this card..."
                 v-model="form.name"
+                ref="input"
             ></textarea>
 
             <div class="add-card-options">
@@ -18,13 +19,10 @@
                     <button class="button is-success" type="submit">
                         Add Card
                     </button>
-                    <button
-                        type="button"
+                    <ButtonClose
+                        :close="close"
                         class="add-card-cancel"
-                        @click="cancel"
-                    >
-                        <i class="fas fa-times"></i>
-                    </button>
+                    ></ButtonClose>
                 </form>
             </div>
         </div>
@@ -33,29 +31,32 @@
 
 <script>
 const Form = require("../Form.js");
+const ButtonClose = require("./ButtonClose.vue").default;
 const eventBus = require("../eventBus.js");
+import { mixin as clickaway } from "vue-clickaway";
 
 export default {
+    mixins: [clickaway],
+    components: {
+        ButtonClose
+    },
     props: {
         listName: String,
         listId: Number
     },
     data() {
         return {
-            focus: false,
+            active: false,
             form: new Form(["name"])
         };
     },
     methods: {
-        addCard() {
-            if (!this.focus) {
-                this.focus = true;
-                console.log("add card", this.focus);
-                // this.createClickOutEventListener();
-            }
+        open() {
+            this.active = true;
+            this.focusInput();
         },
-        cancel() {
-            this.focus = false;
+        close() {
+            this.active = false;
             this.form.reset();
         },
         handleSubmit(e) {
@@ -76,32 +77,12 @@ export default {
                     // console.log({ error });
                     console.log("error", error.response.data.error);
                 });
+        },
+        focusInput() {
+            setTimeout(() => {
+                this.$refs.input.focus();
+            });
         }
-        // createClickOutEventListener() {
-        //     setTimeout(() =>
-        //         window.addEventListener("click", this.clickOutEventHandler)
-        //     );
-        // },
-        // removeClickOutEventListener() {
-        //     window.removeEventListener("click", this.clickOutEventHandler);
-        // },
-        // clickOutEventHandler(e) {
-        //     if (
-        //         (e.target.dataset !== undefined &&
-        //             e.target.dataset.name === this.listName) ||
-        //         (!!e.target.parentElement &&
-        //             e.target.parentElement.dataset !== undefined &&
-        //             e.target.parentElement.dataset.name === this.listName)
-        //     ) {
-        //         // Inside element, dont click out
-        //         return;
-        //     }
-
-        //     // user clicked out
-        //     this.removeClickOutEventListener();
-        //     this.focus = false;
-        //     this.form.reset();
-        // }
     }
 };
 </script>

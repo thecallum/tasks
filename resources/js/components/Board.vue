@@ -1,7 +1,12 @@
 <template>
     <div style="height: 100%">
         <div class="task-container">
-            <Draggable group="lists" handle=".card-header">
+            <Draggable
+                group="lists"
+                handle=".card-header"
+                ghost-class="is-ghost"
+                draggable=".task"
+            >
                 <List
                     v-for="(list, key) in cards"
                     :list="lists[key]"

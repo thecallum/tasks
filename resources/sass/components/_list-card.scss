@@ -15,9 +15,18 @@
         align-items: center;
     }
 
-    &-icon {
+    &-icon,
+    &-desc {
         color: #999;
         position: relative;
+    }
+
+    &-icon {
+        display: none;
+    }
+
+    &-desc {
+        margin-top: 10px;
     }
 
     $ghost-color: hsl(200, 10%, 60%);

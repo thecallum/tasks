@@ -11,19 +11,12 @@ use Symfony\Component\HttpFoundation\Response;
 class CardsController extends Controller
 {
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request, Task $task)
     {
         $this->authorize('owns_task', $task);
 
         $attributes = $this->validateCard($request);
 
-        // Count Number of cards
         $cardCount = $task->cards->count();
 
         $attributes['task_id'] = $task->id;
@@ -35,13 +28,6 @@ class CardsController extends Controller
         return $card;
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Card  $card
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, Card $card)
     {   
         $this->authorize('owns_card', $card);
@@ -50,12 +36,6 @@ class CardsController extends Controller
         return $card;
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Card  $card
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Card $card)
     {
         $this->authorize('owns_card', $card);
@@ -75,14 +55,6 @@ class CardsController extends Controller
 
     public function updateOrder(Request $request, Card $card)
     {   
-        /*
-            Validation
-            ===============
-            1. User Owns card's task
-            2. User owns new task (if moving card to another list)
-
-        */
-
         $this->authorize('owns_task', $card->task);
 
         $attributes = $request->validate([
@@ -92,11 +64,17 @@ class CardsController extends Controller
         ]);
         
         if ((int)$attributes['start_list'] === (int)$attributes['end_list']) {
+
             if ($card->order === $attributes['new_position']) return response(null, 400); // card hasn't moved
+
             $this->updateOrderInSingleList($attributes, $card);
+
         } else {
+
             $this->authorize('owns_task', Task::find($attributes['end_list']));
+
             $this->updateOrderInMultipleLists($attributes, $card);
+
         }
 
         return response(null, 200);
@@ -120,6 +98,13 @@ class CardsController extends Controller
     }
 
     private function updateOrderInSingleList($attributes, $card) {
+        /*
+
+        1. select and update cards that need to be moved.
+        2. Update selected Card
+
+        */
+
         $direction;
         $selectCardsToUpdateOrder = [];
 
@@ -143,6 +128,11 @@ class CardsController extends Controller
     }
 
     private function updateOrderInMultipleLists($attributes, $card) {
+        /*
+        1. Select cards in the first and second list that need updating
+        2. update card
+        */
+
         $task = $card->task;
         $board = $task->board;
 

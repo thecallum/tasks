@@ -10,14 +10,6 @@ class BoardPolicy
 {
     use HandlesAuthorization;
 
-    /**
-     * Determine whether the user can view the board.
-     *
-     * @param  \App\User  $user
-     * @param  \App\Board  $board
-     * @return mixed
-     */
-
     public function update(User $user, Board $board)
     {
         return (int)$user->id === (int)$board->user_id;

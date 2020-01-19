@@ -9,11 +9,13 @@ class Task extends Model
 {
     protected $fillable = ['name', 'board_id', 'order'];
 
-    public function board() {
+    public function board()
+    {
         return $this->belongsTo('App\Board')->withDefault();
     }
 
-    public function cards() {
+    public function cards()
+    {
         return $this->hasMany(Card::class);
     }
 }

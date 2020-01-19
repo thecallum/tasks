@@ -10,39 +10,12 @@ use Illuminate\Http\Request;
 
 class TasksController extends Controller
 {
-    /**
-     * Display a Tasking of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request, Board $board)
     {
         $this->authorize('owns_board', $board);
 
         $attributes = $this->validateTask($request);
 
-        // Count number of tasks
         $taskCount = $board->tasks->count();
 
         $attributes['board_id'] = $board->id;
@@ -51,40 +24,6 @@ class TasksController extends Controller
         $task = Task::create($attributes);
 
         return $task;
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Task  $task
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Task $task)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Task  $task
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Task $task)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Task  $task
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Board $board)
-    {
-        
     }
 
     public function reorder(Request $request, Board $board)
@@ -96,39 +35,38 @@ class TasksController extends Controller
             'end_position' => 'required|numeric',
         ]);
 
-        $task = $board->tasks->where('order', '=', $attributes['start_position'])->first();
+        $task = $board->findCardAtPosition($attributes['start_position']);
 
-        $direction;
-        $selectTasksToUpdateOrder = [];
-
-        if ((int)$attributes['start_position'] < (int)$attributes['end_position']) {
-            $direction = -1; // descending
-            $selectTasksToUpdateOrder[0] = (int)$attributes['start_position'] +1;
-            $selectTasksToUpdateOrder[1] = (int)$attributes['end_position'];
-        } else {
-            $direction = 1; // ascending
-            $selectTasksToUpdateOrder[0] = (int)$attributes['end_position'];
-            $selectTasksToUpdateOrder[1] = (int)$attributes['start_position'] -1;
-        }
-
-        $tasksToUpdateOrder = Task::where('board_id', '=', $board->id)
-            ->whereBetween('order', $selectTasksToUpdateOrder)
-            ->orderBy('order')
-            ->get();
-
-        $this->reorderTasks($tasksToUpdateOrder, $direction);
-
+        $this->updateTaskOrderBetweenRange($board, $attributes['start_position'], $attributes['end_position']);
+    
         $task->update([ 'order' => (int)$attributes['end_position'] ]);
 
         return response(null, 200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Task  $task
-     * @return \Illuminate\Http\Response
-     */
+    private function updateTaskOrderBetweenRange($board, $startPosition, $endPosition)
+    {
+        $direction;
+        $selectTasksToUpdateOrder = [];
+
+        if ((int)$startPosition < (int)$endPosition) {
+            $direction = -1; // descending
+            $selectTasksToUpdateOrder[0] = (int)$startPosition +1;
+            $selectTasksToUpdateOrder[1] = (int)$endPosition;
+        } else {
+            $direction = 1; // ascending
+            $selectTasksToUpdateOrder[0] = (int)$endPosition;
+            $selectTasksToUpdateOrder[1] = (int)$startPosition -1;
+        }
+
+        $tasksToUpdateOrder = Task()->where('board_id', '=', $board->id)
+            ->whereBetween('order', $selectTasksToUpdateOrder)
+            ->orderBy('order')
+            ->get();
+
+        $this->reorderTasks($tasksToUpdateOrder, $direction);
+    }
+
     public function destroy(Task $task)
     {
         $this->authorize('owns_task', $task);
@@ -146,9 +84,7 @@ class TasksController extends Controller
     private function reorderTasks($tasks, $change)
     {
         foreach($tasks as $task) {
-            $task->update([
-                'order' => $task->order + $change
-            ]);
+            $task->update([ 'order' => $task->order + $change ]);
         }
     }
     

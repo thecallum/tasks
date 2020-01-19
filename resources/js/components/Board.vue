@@ -108,10 +108,26 @@ export default {
             eventBus.$on("toggleModal", this.toggleModal);
         },
         initializeLists() {
-            const LISTS = {};
+            const lists = {};
+
+            /*
+                Structure
+                =========
+
+                lists = {
+                    id: 26,
+                    created_at: "2020-01-18 17:11:48",
+                    updated_at: "2020-01-19 11:44:52",
+                    board_id: "1",
+                    name: "Callums newest list",
+                    order: "0",
+                    cards: []
+                };
+
+            */
 
             this.listData.forEach(list => {
-                LISTS[list.id] = {
+                lists[list.id] = {
                     ...list,
                     cards: this.cardData
                         .filter(
@@ -122,9 +138,7 @@ export default {
                 };
             });
 
-            this.lists = LISTS;
-
-            // console.log("LISTS", LISTS);
+            this.lists = lists;
         },
 
         /*
@@ -136,10 +150,7 @@ export default {
         createList(list) {
             this.lists = {
                 ...this.lists,
-                [list.id]: {
-                    ...list,
-                    cards: []
-                }
+                [list.id]: { ...list, cards: [] }
             };
         },
         deleteList(listId) {
@@ -230,10 +241,7 @@ export default {
         taskDragEnd(e) {
             const { oldIndex: start, newIndex: end } = e;
 
-            if (start === end) {
-                console.log("Card Not Moved");
-                return;
-            }
+            if (start === end) return; // Card hasn't moved
 
             this.taskForm.start_position = start;
             this.taskForm.end_position = end;

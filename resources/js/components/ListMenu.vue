@@ -37,7 +37,7 @@ export default {
                     .delete("/tasks/" + this.list.id)
                     .then(response => {
                         console.log("response", response);
-                        eventBus.$emit("deleteList", this.list);
+                        eventBus.$emit("deleteList", this.list.id);
                         this.close();
                     })
                     .catch(error => {

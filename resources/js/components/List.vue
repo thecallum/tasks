@@ -55,7 +55,6 @@ export default {
     },
     props: {
         list: Object,
-        cards: Array,
         cardDragEnd: Function,
         cardDragStart: Function,
         cardAddedToNewList: Function
@@ -63,10 +62,10 @@ export default {
     computed: {
         localCards: {
             get() {
-                return this.cards;
+                return this.list.cards;
             },
             set(newArray) {
-                eventBus.$emit("cardDragged", this.list.name, newArray);
+                eventBus.$emit("cardDragged", this.list.id, newArray);
             }
         }
     },

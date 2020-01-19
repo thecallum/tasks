@@ -45,11 +45,8 @@ class TasksController extends Controller
         // Count number of tasks
         $taskCount = $board->tasks->count();
 
-        return $taskCount;
-
         $attributes['board_id'] = $board->id;
-        // Need to auto increment this...
-        $attributes['order'] = 1;
+        $attributes['order'] = $taskCount;
 
         $task = Task::create($attributes);
 
@@ -85,9 +82,45 @@ class TasksController extends Controller
      * @param  \App\Task  $task
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Task $task)
+    public function update(Request $request, Board $board)
     {
-        //
+        
+    }
+
+    public function reorder(Request $request, Board $board)
+    {
+        $this->authorize('owns_board', $board);
+
+        $attributes = $request->validate([
+            'start_position' => 'required|numeric',
+            'end_position' => 'required|numeric',
+        ]);
+
+        $task = $board->tasks->where('order', '=', $attributes['start_position'])->first();
+
+        $direction;
+        $selectTasksToUpdateOrder = [];
+
+        if ((int)$attributes['start_position'] < (int)$attributes['end_position']) {
+            $direction = -1; // descending
+            $selectTasksToUpdateOrder[0] = (int)$attributes['start_position'] +1;
+            $selectTasksToUpdateOrder[1] = (int)$attributes['end_position'];
+        } else {
+            $direction = 1; // ascending
+            $selectTasksToUpdateOrder[0] = (int)$attributes['end_position'];
+            $selectTasksToUpdateOrder[1] = (int)$attributes['start_position'] -1;
+        }
+
+        $tasksToUpdateOrder = Task::where('board_id', '=', $board->id)
+            ->whereBetween('order', $selectTasksToUpdateOrder)
+            ->orderBy('order')
+            ->get();
+
+        $this->reorderTasks($tasksToUpdateOrder, $direction);
+
+        $task->update([ 'order' => (int)$attributes['end_position'] ]);
+
+        return response(null, 200);
     }
 
     /**
@@ -110,4 +143,13 @@ class TasksController extends Controller
         ]);
     }
 
+    private function reorderTasks($tasks, $change)
+    {
+        foreach($tasks as $task) {
+            $task->update([
+                'order' => $task->order + $change
+            ]);
+        }
+    }
+    
 }

@@ -130,7 +130,7 @@ class CardsController extends Controller
         } else {
             $direction = 1; // ascending
             $selectCardsToUpdateOrder[0] = (int)$card->order -1;
-            $selectCardsToUpdateOrder[0] = (int)$attributes['new_position'];
+            $selectCardsToUpdateOrder[1] = (int)$attributes['new_position'];
         }
 
         $cardsToUpdateOrder = Card::where('task_id', '=', $card->task_id)

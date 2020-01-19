@@ -1,5 +1,5 @@
 <template>
-    <div :data-name="listName" v-on-clickaway="close">
+    <div v-on-clickaway="close">
         <div v-if="!active">
             <button class="add-card-button" @click="open">
                 Add another card
@@ -41,7 +41,6 @@ export default {
         ButtonClose
     },
     props: {
-        listName: String,
         listId: Number
     },
     data() {
@@ -70,7 +69,7 @@ export default {
                     this.form.reset();
 
                     const newCard = response.data;
-                    eventBus.$emit("addCard", newCard, this.listName);
+                    eventBus.$emit("addCard", newCard, this.listId);
                     this.focus = false;
                 })
                 .catch(error => {

@@ -104,11 +104,7 @@ export default {
                 .then(response => {
                     console.log("response", response);
 
-                    eventBus.$emit(
-                        "updateCard",
-                        response.data,
-                        this.card.listName
-                    );
+                    eventBus.$emit("updateCard", response.data);
                     this.close();
                 })
                 .catch(error => {
@@ -125,11 +121,7 @@ export default {
                     .delete("/cards/" + this.card.id)
                     .then(response => {
                         console.log("response", response);
-                        eventBus.$emit(
-                            "deleteCard",
-                            this.card,
-                            this.card.listName
-                        );
+                        eventBus.$emit("deleteCard", this.card);
                         this.close();
                     })
                     .catch(error => {

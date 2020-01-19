@@ -25,6 +25,7 @@
                 animation="200"
                 draggable=".list-card"
                 v-model="localCards"
+                ghost-class="is-ghost"
             >
                 <Card
                     v-for="card in localCards"

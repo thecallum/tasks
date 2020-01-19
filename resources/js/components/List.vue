@@ -18,7 +18,7 @@
 
         <div class="card-content">
             <Draggable
-                :group="group"
+                group="cards"
                 @end="e => cardDragEnd(e, list)"
                 @start="e => cardDragStart(e, list)"
                 @add="e => cardAddedToNewList(e, list)"
@@ -44,6 +44,7 @@ const Draggable = require("vuedraggable");
 const AddCard = require("./AddCard.vue").default;
 const Card = require("./Card.vue").default;
 const ListMenu = require("./ListMenu.vue").default;
+const eventBus = require("../eventBus.js");
 
 export default {
     components: {
@@ -54,8 +55,6 @@ export default {
     },
     props: {
         list: Object,
-        cards: Array,
-        group: String,
         cardDragEnd: Function,
         cardDragStart: Function,
         cardAddedToNewList: Function
@@ -63,10 +62,10 @@ export default {
     computed: {
         localCards: {
             get() {
-                return this.cards;
+                return this.list.cards;
             },
             set(newArray) {
-                eventBus.$emit("cardDragged", this.list.name, newArray);
+                eventBus.$emit("cardDragged", this.list.id, newArray);
             }
         }
     },

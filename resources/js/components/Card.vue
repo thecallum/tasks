@@ -9,7 +9,6 @@
                     v-if="card.description"
                 ></i>
             </span>
-
             <i class="fas fa-pen list-card-icon"></i>
         </div>
     </div>

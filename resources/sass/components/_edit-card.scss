@@ -1,0 +1,11 @@
+.edit-card {
+    &-options {
+        display: flex;
+        margin-top: 15px;
+        align-items: center;
+
+        & > button {
+            margin-right: 15px;
+        }
+    }
+}

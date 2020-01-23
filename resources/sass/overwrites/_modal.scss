@@ -1,0 +1,13 @@
+.modal {
+    &-card-title {
+        background: transparent;
+        border: none;
+        margin-right: 15px;
+    }
+    &-description {
+        color: #999;
+    }
+    &-list-name {
+        text-decoration: underline;
+    }
+}

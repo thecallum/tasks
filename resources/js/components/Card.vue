@@ -1,8 +1,14 @@
 <template>
     <div class="list-card box" @click="editCard">
         <div class="list-card-body">
-            <span>{{ card.name }}</span>
-
+            <span>
+                <div>{{ card.name }}</div>
+                <i
+                    class="fa fa-align-left list-card-desc"
+                    aria-hidden="true"
+                    v-if="card.description"
+                ></i>
+            </span>
             <i class="fas fa-pen list-card-icon"></i>
         </div>
     </div>

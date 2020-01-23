@@ -22,7 +22,11 @@
             </Draggable>
         </div>
 
-        <EditCardModal v-if="modalActive" :card="modalCard"></EditCardModal>
+        <EditCardModal
+            v-if="modalActive"
+            :list-name="lists[modalCard.task_id].name"
+            :card="modalCard"
+        ></EditCardModal>
     </div>
 </template>
 

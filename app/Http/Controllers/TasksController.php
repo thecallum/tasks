@@ -38,8 +38,8 @@ class TasksController extends Controller
         $task = $board->findCardAtPosition($attributes['start_position']);
 
         $this->updateTaskOrderBetweenRange($board, $attributes['start_position'], $attributes['end_position']);
-    
-        $task->update([ 'order' => (int)$attributes['end_position'] ]);
+
+        $task->update([ 'order' => $attributes['end_position'] ]);
 
         return response(null, 200);
     }
@@ -59,7 +59,7 @@ class TasksController extends Controller
             $selectTasksToUpdateOrder[1] = (int)$startPosition -1;
         }
 
-        $tasksToUpdateOrder = Task()->where('board_id', '=', $board->id)
+        $tasksToUpdateOrder = Task::where('board_id', '=', $board->id)
             ->whereBetween('order', $selectTasksToUpdateOrder)
             ->orderBy('order')
             ->get();

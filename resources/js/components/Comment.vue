@@ -17,6 +17,7 @@
 
 <script>
 const Form = require("../Form.js");
+const eventBus = require("../eventBus.js");
 
 export default {
     data() {
@@ -34,6 +35,7 @@ export default {
                     .delete("/comments/" + this.comment.id)
                     .then(response => {
                         console.log("response", response);
+                        eventBus.$emit("deleteComment", this.comment);
                     })
                     .catch(error => {
                         console.log("error", error);

@@ -109,6 +109,9 @@ export default {
             eventBus.$on("deleteList", this.deleteList);
             eventBus.$on("createList", this.createList);
 
+            eventBus.$on("addComment", this.addComment);
+            eventBus.$on("deleteComment", this.deleteComment);
+
             eventBus.$on("cardDragged", this.cardDragged);
 
             eventBus.$on("toggleModal", this.toggleModal);
@@ -182,6 +185,14 @@ export default {
             ].cards.filter(
                 card => card.id.toString() !== selectedCard.id.toString()
             );
+        },
+        addComment(comment) {
+            this.comments = [comment, ...this.comments];
+        },
+        deleteComment(deletedComment) {
+            this.comments = this.comments.filter(comment => {
+                return comment.id.toString() !== deletedComment.id.toString();
+            });
         },
         cardDragged(listId, newArray) {
             // Update Card Index

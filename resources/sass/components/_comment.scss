@@ -1,0 +1,27 @@
+.comment {
+    padding: 15px;
+
+    &-user {
+        font-weight: bold;
+    }
+
+    &-time {
+        color: #999;
+    }
+
+    &:not(:last-child) {
+        margin-bottom: 15px;
+    }
+
+    &-head {
+        display: flex;
+        justify-content: space-between;
+        padding-bottom: 5px;
+    }
+    &-message {
+        white-space: pre;
+        background: whitesmoke;
+        padding: 15px;
+        border-radius: 5px;
+    }
+}

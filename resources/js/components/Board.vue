@@ -23,6 +23,7 @@
         </div>
 
         <EditCardModal
+            :comments-list="comments"
             v-if="modalActive"
             :list-name="lists[modalCard.task_id].name"
             :card="modalCard"
@@ -42,12 +43,11 @@ export default {
     beforeMount() {
         this.initializeLists();
         this.initializeEventHandlers();
-
-        console.table(this.listData);
     },
     props: {
         listData: Array,
         cardData: Array,
+        commentData: Array,
         boardId: String
     },
     components: {
@@ -59,6 +59,8 @@ export default {
     },
     data() {
         return {
+            comments: JSON.parse(JSON.stringify(this.commentData)),
+
             modalActive: false,
             modalCard: {},
 

@@ -36,6 +36,7 @@
             <Board
                 :list-data="{{ $tasks }}"
                 :card-data="{{ $cards }}"
+                :comment-data="{{ $comments }}"
                 board-id="{{ $board->id }}"
             ></Board>
         </div>

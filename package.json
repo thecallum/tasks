@@ -26,6 +26,7 @@
     },
     "dependencies": {
         "bulma-helpers": "^0.3.8",
-        "vue-clickaway": "^2.2.2"
+        "vue-clickaway": "^2.2.2",
+        "vue-timeago": "^5.1.2"
     }
 }

@@ -6,6 +6,13 @@
 
 window.Vue = require("vue");
 
+const VueTimeago = require("vue-timeago");
+
+Vue.use(VueTimeago, {
+    name: "Timeago", // Component name, `Timeago` by default
+    locale: "en" // Default locale
+});
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue

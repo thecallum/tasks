@@ -14,7 +14,9 @@
                 />
 
                 <ul>
-                    <li v-for="error in form.errors">{{ error[0] }}</li>
+                    <li v-for="(error, index) in form.errors" :key="index">
+                        {{ error[0] }}
+                    </li>
                 </ul>
 
                 <div class="add-list-options ">

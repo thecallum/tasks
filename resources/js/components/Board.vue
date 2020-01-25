@@ -22,12 +22,7 @@
             </Draggable>
         </div>
 
-        <EditCardModal
-            :comments-list="comments"
-            v-if="modalActive"
-            :list-name="lists[modalCard.task_id].name"
-            :card="modalCard"
-        ></EditCardModal>
+        <EditCardModal v-if="modalActive"></EditCardModal>
     </div>
 </template>
 
@@ -62,12 +57,6 @@ export default {
     computed: {
         modalActive() {
             return this.$store.state.modalActive;
-        },
-        modalCard() {
-            return this.$store.state.modalCard;
-        },
-        comments() {
-            return this.$store.state.comments;
         },
 
         lists() {

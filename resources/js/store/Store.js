@@ -102,6 +102,13 @@ const Store = new VueX.Store({
                 state.modalCard = {};
             }
         }
+    },
+    getters: {
+        cardComments: state => card_id => {
+            return state.comments.filter(comment => {
+                return comment.card_id.toString() === card_id.toString();
+            });
+        }
     }
 });
 

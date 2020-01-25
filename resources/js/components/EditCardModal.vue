@@ -54,7 +54,7 @@
                         </div>
                     </div>
 
-                    <Comments :comments="comments" :card="card"></Comments>
+                    <Comments :card="card"></Comments>
                 </div>
             </section>
             <footer class="modal-card-foot">
@@ -79,11 +79,6 @@ export default {
         Comments
     },
     mixins: [clickaway],
-    props: {
-        card: Object,
-        listName: String,
-        commentsList: Array
-    },
     data() {
         return {
             updateForm: null,
@@ -97,10 +92,11 @@ export default {
         };
     },
     computed: {
-        comments() {
-            return this.commentsList.filter(comment => {
-                return comment.card_id.toString() === this.card.id.toString();
-            });
+        card() {
+            return this.$store.state.modalCard;
+        },
+        listName() {
+            return this.$store.state.lists[this.card.task_id].name;
         },
         descriptionHeight() {
             if (!this.mounted) return 0;

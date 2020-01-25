@@ -38,8 +38,7 @@ const ButtonClose = require("./ButtonClose.vue").default;
 
 export default {
     props: {
-        card: Object,
-        comments: Array
+        card: Object
     },
     components: {
         Comment,
@@ -67,6 +66,11 @@ export default {
                 .catch(error => {
                     console.log("error", error);
                 });
+        }
+    },
+    computed: {
+        comments() {
+            return this.$store.getters.cardComments(this.card.id);
         }
     }
 };

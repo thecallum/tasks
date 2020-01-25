@@ -36,7 +36,6 @@
 const Form = require("../Form.js");
 import { mixin as clickaway } from "vue-clickaway";
 const ButtonClose = require("./ButtonClose.vue").default;
-const eventBus = require("../eventBus.js");
 
 export default {
     mixins: [clickaway],
@@ -73,7 +72,7 @@ export default {
                 .then(response => {
                     console.log("response", response);
                     this.form.reset();
-                    eventBus.$emit("createList", response.data);
+                    this.$store.commit("createList", { list: response.data });
                     this.close();
                 })
                 .catch(error => {

@@ -15,7 +15,6 @@
 </template>
 
 <script>
-const eventBus = require("../eventBus.js");
 const Form = require("../Form.js");
 
 export default {
@@ -25,9 +24,12 @@ export default {
     },
     methods: {
         editCard() {
-            eventBus.$emit("toggleModal", true, {
-                ...this.card,
-                listName: this.listName
+            this.$store.commit("toggleModal", {
+                showModal: true,
+                card: {
+                    ...this.card,
+                    listName: this.listName
+                }
             });
         }
     }

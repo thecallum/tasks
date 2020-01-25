@@ -5,7 +5,6 @@
  */
 
 window.Vue = require("vue");
-
 const VueTimeago = require("vue-timeago");
 
 Vue.use(VueTimeago, {
@@ -34,6 +33,9 @@ Vue.component("Board", require("./components/Board.vue").default);
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
+const store = require("./store/Store").default;
+
 new Vue({
-    el: "#app"
+    el: "#app",
+    store
 });

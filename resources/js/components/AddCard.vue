@@ -32,7 +32,6 @@
 <script>
 const Form = require("../Form.js");
 const ButtonClose = require("./ButtonClose.vue").default;
-const eventBus = require("../eventBus.js");
 import { mixin as clickaway } from "vue-clickaway";
 
 export default {
@@ -69,7 +68,10 @@ export default {
                     this.form.reset();
 
                     const newCard = response.data;
-                    eventBus.$emit("addCard", newCard, this.listId);
+                    this.$store.commit("addCard", {
+                        newCard,
+                        listId: this.listId
+                    });
                     this.focus = false;
                 })
                 .catch(error => {

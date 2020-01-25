@@ -5,7 +5,8 @@
         font-weight: bold;
     }
 
-    &-time {
+    &-time,
+    &-button {
         color: #999;
     }
 
@@ -23,5 +24,15 @@
         background: whitesmoke;
         padding: 15px;
         border-radius: 5px;
+    }
+
+    &-button {
+        background: transparent;
+        border: none;
+        cursor: pointer;
+
+        &:hover {
+            color: #000;
+        }
     }
 }

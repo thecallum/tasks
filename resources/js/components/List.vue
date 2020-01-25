@@ -45,7 +45,6 @@ const Draggable = require("vuedraggable");
 const AddCard = require("./AddCard.vue").default;
 const Card = require("./Card.vue").default;
 const ListMenu = require("./ListMenu.vue").default;
-const eventBus = require("../eventBus.js");
 
 export default {
     components: {
@@ -66,7 +65,10 @@ export default {
                 return this.list.cards;
             },
             set(newArray) {
-                eventBus.$emit("cardDragged", this.list.id, newArray);
+                this.$store.commit("cardDragged", {
+                    listId: this.list.id,
+                    newArray
+                });
             }
         }
     },

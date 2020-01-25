@@ -22,12 +22,7 @@
             </Draggable>
         </div>
 
-        <EditCardModal
-            :comments-list="comments"
-            v-if="modalActive"
-            :list-name="lists[modalCard.task_id].name"
-            :card="modalCard"
-        ></EditCardModal>
+        <EditCardModal v-if="modalActive"></EditCardModal>
     </div>
 </template>
 
@@ -37,17 +32,9 @@ const List = require("./List.vue").default;
 const Form = require("../Form");
 const AddList = require("./AddList.vue").default;
 const EditCardModal = require("./EditCardModal.vue").default;
-const eventBus = require("../eventBus.js");
 
 export default {
-    beforeMount() {
-        this.initializeLists();
-        this.initializeEventHandlers();
-    },
     props: {
-        listData: Array,
-        cardData: Array,
-        commentData: Array,
         boardId: String
     },
     components: {
@@ -59,13 +46,6 @@ export default {
     },
     data() {
         return {
-            comments: JSON.parse(JSON.stringify(this.commentData)),
-
-            modalActive: false,
-            modalCard: {},
-
-            cards: [],
-            lists: {},
             lastRemoved: null,
             newList: null,
             startIndex: null,
@@ -75,6 +55,14 @@ export default {
     },
 
     computed: {
+        modalActive() {
+            return this.$store.state.modalActive;
+        },
+
+        lists() {
+            return this.$store.state.lists;
+        },
+
         sortedLists: {
             get() {
                 return Object.keys(this.lists)
@@ -88,120 +76,12 @@ export default {
                     newLists[list.id].order = index.toString();
                 });
 
-                this.lists = newLists;
+                this.$store.commit("updateLists", { lists: newLists });
             }
         }
     },
 
     methods: {
-        /*
-            =============
-            Setup Methods
-            =============
-        */
-
-        initializeEventHandlers() {
-            // Global Add Card Event
-            eventBus.$on("addCard", this.addCard);
-            eventBus.$on("deleteCard", this.deleteCard);
-            eventBus.$on("updateCard", this.updateCard);
-
-            eventBus.$on("deleteList", this.deleteList);
-            eventBus.$on("createList", this.createList);
-
-            eventBus.$on("addComment", this.addComment);
-            eventBus.$on("deleteComment", this.deleteComment);
-
-            eventBus.$on("cardDragged", this.cardDragged);
-
-            eventBus.$on("toggleModal", this.toggleModal);
-        },
-        initializeLists() {
-            const lists = {};
-
-            /*
-                Structure
-                =========
-
-                lists = {
-                    id: 26,
-                    created_at: "2020-01-18 17:11:48",
-                    updated_at: "2020-01-19 11:44:52",
-                    board_id: "1",
-                    name: "Callums newest list",
-                    order: "0",
-                    cards: []
-                };
-
-            */
-
-            this.listData.forEach(list => {
-                lists[list.id] = {
-                    ...list,
-                    cards: this.cardData
-                        .filter(
-                            card =>
-                                card.task_id.toString() === list.id.toString()
-                        )
-                        .sort((a, b) => parseInt(a.order) - parseInt(b.order))
-                };
-            });
-
-            this.lists = lists;
-        },
-
-        /*
-            ===================
-            List Update Methods
-            ===================
-        */
-
-        createList(list) {
-            this.lists = {
-                ...this.lists,
-                [list.id]: { ...list, cards: [] }
-            };
-        },
-        deleteList(listId) {
-            const newLists = JSON.parse(JSON.stringify(this.lists));
-            delete newLists[listId];
-            this.lists = newLists;
-        },
-        updateCard(updatedCard) {
-            this.lists[updatedCard.task_id].cards = this.lists[
-                updatedCard.task_id
-            ].cards.map(card => {
-                return card.id.toString() === updatedCard.id.toString()
-                    ? updatedCard
-                    : card;
-            });
-        },
-        addCard(newCard, listId) {
-            this.lists[listId].cards = [...this.lists[listId].cards, newCard];
-        },
-        deleteCard(selectedCard) {
-            this.lists[selectedCard.task_id].cards = this.lists[
-                selectedCard.task_id
-            ].cards.filter(
-                card => card.id.toString() !== selectedCard.id.toString()
-            );
-        },
-        addComment(comment) {
-            this.comments = [comment, ...this.comments];
-        },
-        deleteComment(deletedComment) {
-            this.comments = this.comments.filter(comment => {
-                return comment.id.toString() !== deletedComment.id.toString();
-            });
-        },
-        cardDragged(listId, newArray) {
-            // Update Card Index
-            this.lists[listId].cards = newArray.map((card, index) => ({
-                ...card,
-                order: index
-            }));
-        },
-
         /*
             ===========================
             Drag Event Methods
@@ -267,27 +147,10 @@ export default {
                 .patch("/tasks/" + this.boardId)
                 .then(response => {
                     console.log("response", response);
-                    eventBus.$emit("reorderTasks", start, end);
                 })
                 .catch(error => {
                     console.log("error", error);
                 });
-        },
-
-        /*
-        =============
-        Modal methods
-        =============
-        */
-
-        toggleModal(showModal, card) {
-            if (showModal) {
-                this.modalCard = card;
-                this.modalActive = true;
-            } else {
-                this.modalActive = false;
-                this.modalCard = {};
-            }
         }
     }
 };

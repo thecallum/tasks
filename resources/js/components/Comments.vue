@@ -35,12 +35,10 @@
 const Comment = require("./Comment.vue").default;
 const Form = require("../Form.js");
 const ButtonClose = require("./ButtonClose.vue").default;
-const eventBus = require("../eventBus.js");
 
 export default {
     props: {
-        card: Object,
-        comments: Array
+        card: Object
     },
     components: {
         Comment,
@@ -60,12 +58,19 @@ export default {
                 .post("/comments/" + this.card.id)
                 .then(response => {
                     console.log("response", response);
-                    eventBus.$emit("addComment", response.data);
+                    this.$store.commit("addComment", {
+                        comment: response.data
+                    });
                     this.form.reset();
                 })
                 .catch(error => {
                     console.log("error", error);
                 });
+        }
+    },
+    computed: {
+        comments() {
+            return this.$store.getters.cardComments(this.card.id);
         }
     }
 };

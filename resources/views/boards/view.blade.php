@@ -30,15 +30,20 @@
     </div>
     </section>
 
+    <script>
+        var data = {
+            "lists": @json($tasks),
+            "cards": @json($cards),
+            "comments": @json($comments)
+        }
+  
+    </script>
+    
+
     <section style="flex-grow:1">
     
         <div id="app" style="height: 100%;">
-            <Board
-                :list-data="{{ $tasks }}"
-                :card-data="{{ $cards }}"
-                :comment-data="{{ $comments }}"
-                board-id="{{ $board->id }}"
-            ></Board>
+            <Board board-id="{{ $board->id }}"></Board>
         </div>
 
     </section>

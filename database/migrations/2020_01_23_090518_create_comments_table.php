@@ -23,7 +23,7 @@ class CreateCommentsTable extends Migration
             $table->bigInteger('user_id')->unsigned()->index();
 
             $table->foreign('card_id')->references('id')->on('cards')->onDelete('cascade');
-            $table->foreign('user_id')->references('id')->on('boards')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
         Schema::enableForeignKeyConstraints();
     }

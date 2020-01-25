@@ -16,7 +16,6 @@
 
 <script>
 import { mixin as clickaway } from "vue-clickaway";
-const eventBus = require("../eventBus.js");
 const Form = require("../Form.js");
 
 export default {
@@ -37,7 +36,7 @@ export default {
                     .delete("/tasks/" + this.list.id)
                     .then(response => {
                         console.log("response", response);
-                        eventBus.$emit("deleteList", this.list.id);
+                        this.$store.commit("deleteList", { list: this.list });
                         this.close();
                     })
                     .catch(error => {

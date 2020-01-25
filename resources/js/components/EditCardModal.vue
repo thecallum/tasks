@@ -54,7 +54,7 @@
                         </div>
                     </div>
 
-                    <Comments :comments="comments" :card="card"></Comments>
+                    <Comments :card="card"></Comments>
                 </div>
             </section>
             <footer class="modal-card-foot">
@@ -68,7 +68,6 @@
 </template>
 
 <script>
-const eventBus = require("../eventBus.js");
 const Form = require("../Form.js");
 import { mixin as clickaway } from "vue-clickaway";
 const ButtonClose = require("./ButtonClose.vue").default;
@@ -80,11 +79,6 @@ export default {
         Comments
     },
     mixins: [clickaway],
-    props: {
-        card: Object,
-        listName: String,
-        commentsList: Array
-    },
     data() {
         return {
             updateForm: null,
@@ -98,10 +92,11 @@ export default {
         };
     },
     computed: {
-        comments() {
-            return this.commentsList.filter(comment => {
-                return comment.card_id.toString() === this.card.id.toString();
-            });
+        card() {
+            return this.$store.state.modalCard;
+        },
+        listName() {
+            return this.$store.state.lists[this.card.task_id].name;
         },
         descriptionHeight() {
             if (!this.mounted) return 0;
@@ -152,7 +147,7 @@ export default {
             this.close();
         },
         close() {
-            eventBus.$emit("toggleModal", false);
+            this.$store.commit("toggleModal", { showModal: false });
         },
         handleSubmit() {
             this.updateForm
@@ -160,7 +155,7 @@ export default {
                 .then(response => {
                     console.log("response", response);
 
-                    eventBus.$emit("updateCard", response.data);
+                    this.$store.commit("updateCard", { card: response.data });
                     // this.close();
                 })
                 .catch(error => {
@@ -173,7 +168,7 @@ export default {
                     .delete("/cards/" + this.card.id)
                     .then(response => {
                         console.log("response", response);
-                        eventBus.$emit("deleteCard", this.card);
+                        this.$store.commit("deleteCard", { card: this.card });
                         this.close();
                     })
                     .catch(error => {

@@ -25,4 +25,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/cards/{card}', 'CardsController@destroy');
     Route::patch('/cards/{card}', 'CardsController@update');
     Route::patch('/cards/order/{card}', 'CardsController@updateOrder');
+
+    Route::post('/comments/{card}', 'CommentController@store');
+    Route::delete('/comments/{comment}', 'CommentController@destroy');
 });

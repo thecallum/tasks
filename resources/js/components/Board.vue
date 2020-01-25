@@ -23,6 +23,7 @@
         </div>
 
         <EditCardModal
+            :comments-list="comments"
             v-if="modalActive"
             :list-name="lists[modalCard.task_id].name"
             :card="modalCard"
@@ -42,12 +43,11 @@ export default {
     beforeMount() {
         this.initializeLists();
         this.initializeEventHandlers();
-
-        console.table(this.listData);
     },
     props: {
         listData: Array,
         cardData: Array,
+        commentData: Array,
         boardId: String
     },
     components: {
@@ -59,6 +59,8 @@ export default {
     },
     data() {
         return {
+            comments: JSON.parse(JSON.stringify(this.commentData)),
+
             modalActive: false,
             modalCard: {},
 
@@ -106,6 +108,9 @@ export default {
 
             eventBus.$on("deleteList", this.deleteList);
             eventBus.$on("createList", this.createList);
+
+            eventBus.$on("addComment", this.addComment);
+            eventBus.$on("deleteComment", this.deleteComment);
 
             eventBus.$on("cardDragged", this.cardDragged);
 
@@ -180,6 +185,14 @@ export default {
             ].cards.filter(
                 card => card.id.toString() !== selectedCard.id.toString()
             );
+        },
+        addComment(comment) {
+            this.comments = [comment, ...this.comments];
+        },
+        deleteComment(deletedComment) {
+            this.comments = this.comments.filter(comment => {
+                return comment.id.toString() !== deletedComment.id.toString();
+            });
         },
         cardDragged(listId, newArray) {
             // Update Card Index

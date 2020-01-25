@@ -21,13 +21,8 @@
                 ></button>
             </header>
             <section class="modal-card-body">
-                <!-- Content ... -->
-
+                <h2 class="subtitle">Description</h2>
                 <div class="field">
-                    <label class="label">
-                        Description
-                    </label>
-
                     <div v-if="!descriptionActive">
                         <div @click="showDescription">
                             <div
@@ -58,30 +53,9 @@
                             </div>
                         </div>
                     </div>
+
+                    <Comments :comments="comments" :card="card"></Comments>
                 </div>
-
-                <!--
-
-                <div>
-                    <button
-                        class="button is-danger"
-                        type="button"
-                        @click="deleteCard"
-                    >
-                        Delete Card
-                    </button>
-                </div>
-
-                <ul>
-                    <li
-                        v-for="error in updateForm.errors"
-                        class="has-text-danger"
-                    >
-                        {{ error[0] }}
-                    </li>
-                </ul>
-
-                -->
             </section>
             <footer class="modal-card-foot">
                 <button class="button is-success" @click="handleSubmit">
@@ -98,15 +72,18 @@ const eventBus = require("../eventBus.js");
 const Form = require("../Form.js");
 import { mixin as clickaway } from "vue-clickaway";
 const ButtonClose = require("./ButtonClose.vue").default;
+const Comments = require("./Comments.vue").default;
 
 export default {
     components: {
-        ButtonClose
+        ButtonClose,
+        Comments
     },
     mixins: [clickaway],
     props: {
         card: Object,
-        listName: String
+        listName: String,
+        commentsList: Array
     },
     data() {
         return {
@@ -121,11 +98,17 @@ export default {
         };
     },
     computed: {
+        comments() {
+            return this.commentsList.filter(comment => {
+                return comment.card_id.toString() === this.card.id.toString();
+            });
+        },
         descriptionHeight() {
             if (!this.mounted) return 0;
 
             const numberOfLines =
-                this.updateForm.description === null
+                this.updateForm.description === null ||
+                this.updateForm.description === undefined
                     ? 0
                     : this.updateForm.description.split("\n").length;
 

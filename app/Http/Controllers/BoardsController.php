@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Board;
+use App\Comment;
 use Illuminate\Http\Request;
 
 class BoardsController extends Controller
@@ -35,8 +36,13 @@ class BoardsController extends Controller
 
         $tasks = $board->tasks;
         $cards = $board->cards;
+        $comments = $board->comments
+            ->join('users', 'user_id', '=', 'users.id')
+            ->select('comments.*', 'users.name')
+            ->orderBy('updated_at', 'desc')
+            ->get();
 
-        return view('boards.view', compact(['board', 'tasks', 'cards']));
+        return view('boards.view', compact(['board', 'tasks', 'cards', 'comments']));
     }
 
     public function edit(Board $board)

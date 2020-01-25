@@ -11,7 +11,14 @@
 |
  */
 
-Route::view('/', 'index');
+Route::get('/', function() {
+
+    if (auth()->user()) {
+       return redirect('/boards/');
+    }
+
+    return view('index');
+});
 
 Auth::routes();
 

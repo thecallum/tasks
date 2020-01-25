@@ -7,12 +7,12 @@
 @endsection
 
 @section('content')
-<section class="section has-background-primary">
+<section class="section has-background-grey-dark">
 
     <div class="level">
         <div class="level-left">
             <div class="level-item">
-                <h1 class="title">{{ $board->name }}</h1>
+                <h1 class="title has-text-white">{{ $board->name }}</h1>
             </div>
         </div>
 

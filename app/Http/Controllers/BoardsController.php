@@ -33,14 +33,19 @@ class BoardsController extends Controller
     public function show(Board $board)
     {
         $this->authorize('update', $board);
+        
+        $comments = [];
 
         $tasks = $board->tasks;
         $cards = $board->cards;
-        $comments = $board->comments
+        
+        if ($board->comments !== null) {
+            $comments = $board->comments
             ->join('users', 'user_id', '=', 'users.id')
             ->select('comments.*', 'users.name')
             ->orderBy('updated_at', 'desc')
             ->get();
+        }
 
         return view('boards.view', compact(['board', 'tasks', 'cards', 'comments']));
     }

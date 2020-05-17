@@ -11,7 +11,7 @@ Kanban board build with Laravel and Vue.
 
 Tasks is a Kanban board, closely modelled on Trello. You can drag/rearange tasks into different categories.
 
-![Screenshot of project](/https://github.com/thecallum/tasks/blob/readme/screenshots/Screenshot%20from%202020-05-17%2010-43-40.png?raw=true)
+![Screenshot of project](https://raw.githubusercontent.com/thecallum/tasks/master/screenshots/Screenshot%20from%202020-05-17%2010-43-40.png)
 
 
 ## What I learned
